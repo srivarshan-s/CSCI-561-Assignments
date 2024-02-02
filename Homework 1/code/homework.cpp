@@ -89,6 +89,9 @@ void print_path(vector<Node> &visited, Node &node, Output &output)
 // Function to perform breadth-first search
 void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
 {
+    clock_t start, end;
+    vector<double> open_time, close_time;
+    
     // Initialize open queue
     queue<Node> open;
 
@@ -144,12 +147,20 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             child_node.momentum = max(0, curr_node.z - child_node.z);
 
             // Check if child is in visited array
-            if (contains(visited, child, parent_idx, child_node.momentum))
-                continue;
+            start = clock();
+            bool x = contains(visited, child, parent_idx, child_node.momentum);
+            end = clock();
+            double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+            close_time.push_back(time_taken);
+            if (x) continue;
 
             // Check if child is in open queue
-            if (contains(open, child, parent_idx, child_node.momentum))
-                continue;
+            start = clock();
+            x = contains(open, child, parent_idx, child_node.momentum);
+            end = clock();
+            time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+            open_time.push_back(time_taken);
+            if (x) continue;
 
             // Check if child is reachable
             int energy_req = child_node.z - curr_node.z;
@@ -166,6 +177,39 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             open.push(child_node);
         }
     }
+    
+    double time_taken_open = 0;
+    for (int i = 0; i < open_time.size(); i++)
+    {
+        time_taken_open += open_time[i];
+    }
+
+    double time_taken_close = 0;
+    for (int i = 0; i < close_time.size(); i++)
+    {
+        time_taken_close += close_time[i];
+    }
+
+    cout << endl;
+    cout << "Total time taken for open queue is : " << fixed 
+         << time_taken_open << setprecision(5);
+    cout << " sec " << endl;
+    cout << "Total time taken for close array is : " << fixed 
+         << time_taken_close << setprecision(5);
+    cout << " sec " << endl;
+
+    time_taken_open /= open_time.size();
+    time_taken_close /= close_time.size();
+
+    cout << endl;
+    cout << "Average time taken for open queue is : " << fixed 
+         << time_taken_open << setprecision(5);
+    cout << " sec " << endl;
+    cout << "Average time taken for close array is : " << fixed 
+         << time_taken_close << setprecision(5);
+    cout << " sec " << endl;
+
+    
 }
 
 int main()
