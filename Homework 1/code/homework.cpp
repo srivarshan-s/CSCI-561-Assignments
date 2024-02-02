@@ -89,6 +89,7 @@ void print_path(vector<Node> &visited, Node &node, Output &output)
 // Function to perform breadth-first search
 void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
 {
+    // Initialize clock functions
     clock_t start, end;
     vector<double> open_time, close_time;
     
@@ -197,19 +198,6 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     cout << "Total time taken for close array is : " << fixed 
          << time_taken_close << setprecision(5);
     cout << " sec " << endl;
-
-    time_taken_open /= open_time.size();
-    time_taken_close /= close_time.size();
-
-    cout << endl;
-    cout << "Average time taken for open queue is : " << fixed 
-         << time_taken_open << setprecision(5);
-    cout << " sec " << endl;
-    cout << "Average time taken for close array is : " << fixed 
-         << time_taken_close << setprecision(5);
-    cout << " sec " << endl;
-
-    
 }
 
 int main()
