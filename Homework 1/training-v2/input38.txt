@@ -1,0 +1,803 @@
+BFS
+46
+256
+vqo 19 720 719
+ov 378 643 659
+qfotu 346 923 981
+hjebt 451 669 66
+wftz 246 727 808
+ibs 916 763 954
+smoit 805 182 481
+mxfk 780 466 906
+iqz 853 608 779
+gdvgp 267 598 873
+ymt 992 998 319
+brgld 203 162 968
+bgcwn 534 332 788
+gkdf 974 579 521
+pqp 632 840 30
+kit 945 963 845
+mfwd 161 864 798
+qjp 303 890 938
+zqfp 86 360 491
+ojth 188 240 711
+cn 32 429 644
+eiimk 551 793 400
+qrtv 257 538 979
+qaypx 990 625 156
+rh 769 441 785
+kn 964 340 616
+yyw 751 884 986
+nnpcy 324 231 927
+nkje 702 459 121
+putgt 519 961 183
+rnzap 960 828 651
+itmrm 113 190 228
+bvpux 486 620 816
+hp 0 753 273
+rudn 932 919 227
+aw 332 99 495
+qrv 328 806 856
+ny 610 246 702
+hiqll 919 104 220
+rukth 394 161 50
+qf 760 124 937
+mxt 928 124 291
+aayw 945 797 160
+tkcf 126 843 401
+sgsg 30 265 311
+aijtt 708 280 476
+gwif 880 595 211
+hb 61 511 757
+bt 950 230 465
+jgoey 296 979 142
+jd 184 71 120
+bn 94 32 452
+ysw 4 439 341
+ln 292 938 196
+npgug 22 193 758
+rt 341 80 483
+ivd 379 247 209
+crw 824 405 809
+ppf 365 331 823
+ej 222 229 534
+mr 407 465 234
+rllwt 380 217 184
+zf 201 602 16
+hq 786 423 820
+urshf 561 413 348
+lcvel 888 912 603
+sz 448 377 156
+tmkh 23 252 784
+eiwdk 384 189 104
+xlxrz 143 281 842
+aa 936 293 814
+bos 36 408 505
+soht 758 579 923
+scch 938 166 215
+hbqye 424 124 716
+olf 879 9 715
+rmti 355 153 241
+prvh 852 776 185
+py 240 370 389
+is 265 812 800
+xwx 648 598 421
+csjo 193 493 636
+ce 518 363 141
+dc 262 453 755
+qozd 339 19 374
+vsh 367 593 701
+pfa 550 795 584
+os 548 737 944
+mjeh 884 843 783
+crj 954 86 226
+rvpfi 974 332 45
+krpt 870 476 775
+av 799 723 927
+xo 603 157 489
+tcon 334 763 57
+aoum 592 579 189
+lkwl 679 803 484
+qs 904 165 541
+ij 398 851 895
+bkm 723 5 636
+wo 989 766 438
+blx 534 732 261
+ibzsq 409 322 865
+fu 324 255 200
+ob 566 906 53
+awbx 906 141 408
+mf 227 25 873
+pwwr 342 220 80
+ufzjr 701 710 742
+uvwv 840 422 596
+xjliu 20 992 490
+start 927 295 808
+fpi 54 705 471
+ovofu 511 343 520
+wnws 677 381 588
+ifp 139 468 868
+qgsr 8 89 258
+byqgi 956 138 806
+fz 992 621 546
+goal 120 24 921
+dhb 548 65 782
+lu 712 80 869
+kly 641 32 979
+ufi 362 482 111
+hcbd 726 13 518
+vco 882 316 580
+be 608 359 870
+yecgf 850 358 267
+rz 509 926 704
+kbfx 531 664 637
+idnnk 28 191 134
+ytdep 529 164 776
+xh 885 178 813
+ib 280 230 258
+dwei 245 287 735
+um 591 268 306
+afsk 704 818 875
+yvk 208 945 791
+pgglt 500 585 321
+srs 718 777 580
+pif 879 466 942
+dvfbn 947 21 395
+kx 334 786 951
+lzpfj 739 168 618
+go 795 291 719
+qgpg 319 874 298
+roh 644 378 646
+ayya 957 450 75
+tall 481 145 884
+ka 461 992 224
+yfz 321 488 399
+xno 375 902 32
+oyja 503 720 984
+ztgo 594 734 588
+ls 294 464 474
+pekfz 23 199 482
+fggqw 928 45 823
+cvzq 532 823 76
+aihol 747 960 196
+gh 49 509 533
+obztg 855 636 777
+qevtx 983 268 703
+wd 193 418 780
+kdbm 623 583 342
+ynyyn 962 815 200
+uqz 228 295 776
+ry 628 437 390
+pk 95 640 626
+aqc 564 754 78
+bjlba 577 186 583
+yx 276 353 576
+thq 612 587 628
+bqvy 137 704 586
+ht 819 428 447
+jg 479 328 770
+uieub 230 410 11
+uxbyt 616 266 240
+ozpu 881 855 708
+aie 428 583 767
+no 723 37 78
+kitl 166 410 400
+srf 633 302 621
+jernh 456 669 438
+cj 28 765 206
+ota 11 504 749
+lunnp 763 878 983
+an 295 0 187
+qpqcx 751 761 676
+idle 976 52 519
+lfa 134 2 721
+utb 367 147 628
+do 439 505 163
+onp 963 717 525
+ujahd 303 99 616
+nkqwp 959 296 341
+odmx 902 956 513
+kj 432 68 660
+yqe 26 513 111
+ybehn 524 730 230
+mnkyr 940 224 250
+vxe 898 766 373
+pn 781 511 758
+bl 826 528 999
+mg 142 763 599
+vwm 999 524 553
+vkunx 152 248 275
+uq 618 928 697
+bjoz 973 917 877
+gimtf 583 569 406
+zuap 609 464 3
+bc 444 43 644
+tcmp 233 778 868
+yzgdg 728 642 769
+lc 447 353 679
+alkjd 492 702 20
+qyw 104 959 270
+xeywf 175 415 769
+pt 907 276 766
+ur 470 991 101
+ctn 424 869 958
+tsgvd 718 487 671
+zkxiw 969 367 76
+swhz 933 931 936
+kckdb 160 673 198
+uahm 679 478 800
+mcju 435 505 10
+sda 363 228 872
+cdbry 611 744 186
+xls 156 988 494
+vq 436 504 134
+seizw 584 755 288
+kf 574 370 414
+pdobq 657 382 611
+fc 190 326 466
+hdmti 589 977 475
+xae 519 804 881
+umoh 175 631 351
+azwnt 17 829 461
+qi 860 318 12
+sfu 807 166 753
+tsv 212 805 654
+fcgpd 207 478 141
+up 178 84 955
+snrfc 920 92 42
+njrbq 852 630 602
+qn 592 593 875
+gvlkd 572 874 845
+fogs 638 390 159
+vsqix 48 235 722
+lio 365 479 789
+naj 11 911 407
+jnqx 507 467 745
+iiai 8 452 403
+umy 929 279 620
+wth 320 498 363
+vyovw 836 597 783
+543
+py vsh
+kdbm fcgpd
+dhb ce
+smoit eiwdk
+ht jnqx
+xae bc
+qgpg os
+lu uahm
+qpqcx hdmti
+yqe yx
+go gimtf
+uxbyt hjebt
+lunnp qaypx
+lu smoit
+csjo hbqye
+srf roh
+pt aijtt
+bgcwn wth
+qn kx
+start no
+yyw zuap
+pgglt ivd
+fu ny
+mxfk xh
+rudn krpt
+ovofu utb
+rz putgt
+qozd ovofu
+vsqix fu
+xo up
+mxfk njrbq
+fc vqo
+fcgpd tkcf
+tcmp ij
+tsgvd srf
+nkje be
+um pif
+ozpu qn
+vqo hp
+be qpqcx
+aihol hdmti
+yx njrbq
+bkm um
+ht gimtf
+urshf vsh
+qgpg kdbm
+afsk py
+os ka
+bvpux ovofu
+kn thq
+qgpg aie
+start azwnt
+vwm hq
+urshf yzgdg
+xo xh
+ayya fcgpd
+gdvgp ufi
+sfu ibzsq
+crw vq
+qi aijtt
+yx gh
+kdbm qrtv
+rukth vsh
+ob qpqcx
+yzgdg is
+vco bgcwn
+aijtt fogs
+oyja fcgpd
+bl vco
+aoum csjo
+rz tcmp
+jernh jg
+pwwr gdvgp
+mxfk lu
+bvpux lu
+eiwdk itmrm
+pn mcju
+ymt njrbq
+ppf wftz
+oyja ybehn
+hiqll fggqw
+pqp cdbry
+azwnt ov
+wftz lc
+hbqye tmkh
+vxe qaypx
+bgcwn lu
+crj start
+wth azwnt
+umy thq
+vkunx ivd
+jnqx kdbm
+vsqix aayw
+smoit rvpfi
+mfwd qgpg
+jnqx gimtf
+ztgo do
+ujahd bc
+xh pdobq
+iiai ota
+vsh utb
+ce thq
+sda sfu
+pfa yzgdg
+oyja yyw
+rz ibs
+ls mr
+ej ivd
+qrtv tmkh
+jnqx tall
+ufzjr ozpu
+gkdf onp
+urshf thq
+jnqx cdbry
+hbqye hcbd
+cvzq lunnp
+fc pk
+gkdf dwei
+ivd sz
+eiwdk cn
+gwif kn
+wd hjebt
+fz pdobq
+zkxiw xo
+ojth dc
+dhb lzpfj
+xls ctn
+rukth ib
+dc tcmp
+byqgi scch
+ny bt
+kdbm ny
+gdvgp be
+tall rz
+scch krpt
+ce oyja
+dwei bc
+pgglt tcmp
+sda ifp
+krpt ybehn
+mxt vsqix
+aayw kdbm
+lu jg
+qf scch
+yx ej
+pgglt aqc
+kx ur
+uvwv rz
+aayw thq
+aie dc
+ivd vsqix
+nkqwp hcbd
+jg bl
+bl lcvel
+snrfc no
+uxbyt fc
+pn rh
+lkwl pqp
+srs aie
+ovofu sda
+ufzjr seizw
+fcgpd vco
+vyovw dwei
+obztg kx
+soht wnws
+roh ufi
+xeywf pwwr
+rvpfi nkje
+qs kf
+yzgdg ynyyn
+hcbd uxbyt
+idnnk brgld
+srf uahm
+aayw av
+bos obztg
+obztg aqc
+lunnp wo
+ny aie
+aijtt ibzsq
+ur srs
+bgcwn ej
+gwif cdbry
+dhb rh
+fc ifp
+kckdb ota
+njrbq azwnt
+ysw xlxrz
+tcon mfwd
+yx zf
+eiimk hjebt
+dwei uvwv
+kdbm uahm
+qi bt
+srf urshf
+ifp goal
+thq ls
+hb qrv
+kbfx oyja
+zqfp nnpcy
+nkqwp vco
+bt srf
+bjlba ny
+blx av
+awbx fcgpd
+kitl itmrm
+alkjd tcon
+mf dhb
+hq sfu
+qgpg awbx
+aayw prvh
+qaypx qevtx
+npgug bc
+njrbq os
+mxt pif
+pn gwif
+qf jg
+ppf jernh
+pekfz qozd
+qn kckdb
+oyja kckdb
+pn rnzap
+ovofu aie
+qrv alkjd
+dvfbn mxt
+fpi yx
+bt snrfc
+vqo bqvy
+nkje pif
+kbfx cdbry
+kf fogs
+vxe rvpfi
+hcbd snrfc
+ht crw
+bl roh
+azwnt yqe
+mf vsqix
+umoh jnqx
+lu hcbd
+seizw kbfx
+aijtt bt
+bgcwn srf
+gh sz
+tsgvd cvzq
+putgt qgpg
+pif ibs
+aa qevtx
+up ujahd
+aoum zf
+uieub ib
+qn pdobq
+umoh wth
+blx ur
+umoh csjo
+pwwr tall
+ry kj
+ny dvfbn
+fc ota
+seizw eiimk
+lzpfj qf
+ufi aihol
+qf aijtt
+ibzsq pk
+swhz rllwt
+odmx gkdf
+smoit byqgi
+qs zuap
+ny lzpfj
+qrv afsk
+bgcwn qs
+yx jnqx
+gh hb
+aihol afsk
+qrtv bqvy
+rt ppf
+seizw rh
+ovofu mxfk
+dwei qozd
+wftz uieub
+mnkyr ayya
+pfa pgglt
+vco wnws
+ce bvpux
+hq umy
+rukth ovofu
+yx ytdep
+kn no
+uq seizw
+uq os
+mxfk bt
+crw aoum
+gkdf yzgdg
+qf rllwt
+cj qgpg
+qrv yzgdg
+kly an
+ojth uieub
+ppf yfz
+ujahd ej
+zuap smoit
+lfa rt
+vco gkdf
+gimtf uahm
+up fu
+uahm byqgi
+ej yfz
+hcbd kn
+bjoz vxe
+rudn fz
+kj hcbd
+ht njrbq
+vco sz
+yqe vqo
+aijtt umy
+zkxiw hiqll
+um rh
+ifp pgglt
+ojth ib
+hbqye itmrm
+no ry
+mxt uahm
+rh cdbry
+start pt
+xlxrz yqe
+ny qn
+sfu pt
+qn umoh
+kn zuap
+crw gkdf
+rh ivd
+bjoz av
+gimtf uvwv
+ce no
+ufzjr ztgo
+xlxrz fcgpd
+vsqix ysw
+qgsr uqz
+bt urshf
+kj jg
+aoum yzgdg
+dwei be
+bgcwn dhb
+oyja tcmp
+uq lunnp
+ota gh
+yzgdg jnqx
+vqo ifp
+vsh vq
+ivd sgsg
+qrv do
+gvlkd gdvgp
+lunnp qgpg
+rt ufi
+ib kitl
+aijtt rt
+urshf ny
+thq blx
+azwnt ht
+qyw bn
+dc yfz
+putgt dvfbn
+onp ybehn
+ry yx
+njrbq ob
+hq pif
+mcju afsk
+rt ce
+sgsg hb
+vco olf
+rllwt ib
+aoum krpt
+ytdep start
+hcbd bt
+qevtx bt
+kbfx bqvy
+fogs mxt
+urshf do
+py ojth
+no aijtt
+py thq
+xh no
+pwwr jd
+idle ayya
+rudn blx
+rmti goal
+hq uxbyt
+rukth pwwr
+itmrm rukth
+ibs ce
+pekfz goal
+pdobq uxbyt
+rmti ry
+pfa ztgo
+cdbry ce
+hq crw
+obztg lunnp
+ztgo vxe
+xno umy
+vsh mg
+go olf
+qpqcx yecgf
+ibs ayya
+rvpfi kly
+pif start
+lu olf
+azwnt naj
+putgt afsk
+mxt yecgf
+eiimk zf
+hbqye qgsr
+onp fz
+npgug an
+wth do
+jgoey hjebt
+tall xo
+ufi tcmp
+aqc kckdb
+bvpux xeywf
+rmti jg
+uieub yx
+pn sz
+pdobq xwx
+snrfc tall
+urshf ej
+do yfz
+aayw afsk
+fcgpd no
+vsh bqvy
+rudn afsk
+xlxrz ce
+pqp seizw
+pn bt
+kit gwif
+do ej
+lu wnws
+soht gvlkd
+seizw xwx
+kly pwwr
+olf bc
+qn lc
+qs byqgi
+do pdobq
+srf olf
+aoum qrv
+be seizw
+lcvel lkwl
+bvpux blx
+nkqwp fogs
+cn do
+lzpfj rllwt
+hiqll go
+byqgi bt
+kitl csjo
+bgcwn uxbyt
+mfwd tsv
+kj rt
+yqe idnnk
+soht lunnp
+uieub aw
+eiimk qjp
+xeywf tall
+fu umoh
+kx pqp
+gdvgp mr
+sz jd
+rllwt go
+ybehn pdobq
+eiimk ry
+kitl sgsg
+zf mcju
+pt ufi
+ifp pt
+vxe onp
+krpt tsgvd
+qn pif
+yvk ynyyn
+bc fc
+tall aoum
+rmti sz
+ovofu ojth
+xjliu ej
+roh ry
+awbx gwif
+ztgo bjoz
+vsh ayya
+dhb mr
+bt qs
+rudn rz
+bn xlxrz
+kitl rukth
+qrv blx
+qi rvpfi
+kly yecgf
+aie iiai
+lkwl wftz
+lu obztg
+rmti brgld
+ur qfotu
+ls bvpux
+qn tcmp
+csjo vsqix
+kx rmti
+kitl fu
+umoh ctn
+jernh mfwd
+obztg roh
+kit ozpu
+kn nkqwp
+wnws hjebt
+uvwv qevtx
+iqz naj
+mr umoh
+mjeh ozpu
+uxbyt xwx
+ls hp
+yx aoum
+prvh thq
+wth uahm
+rnzap cdbry
+qi bjlba
+is qgpg
+up sda
+njrbq kit
+crw ybehn
+aayw ybehn
+ufi lio
+qfotu is
+lzpfj rt
+dhb bjlba
+tcon kbfx
+ibs yyw
+lfa uqz
+vxe yzgdg
+pwwr pdobq
+ibzsq uqz
+nkje prvh
+ovofu xeywf
+yx sz
+ln umoh
+qi qn
+sda yfz
+up brgld
+krpt thq
+aie qjp
