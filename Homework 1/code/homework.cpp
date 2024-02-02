@@ -48,7 +48,7 @@ bool contains(queue<Node> q, int &ele, int &parent, int &momemtum)
         {
             if (q.front().parent == parent)
                 return true;
-            if (q.front().momentum == momemtum)
+            if (q.front().momentum >= momemtum)
                 return true;
         }
         q.pop();
@@ -229,20 +229,28 @@ int main()
     // Close the input file
     input_file.close();
 
-    // Initialize the output struct
-    Output output;
-    output.output_file.open("output.txt");
-    output.pathlen_file.open("pathlen.txt");
+    // // Initialize the output struct
+    // Output output;
+    // output.output_file.open("output.txt");
+    // output.pathlen_file.open("pathlen.txt");
 
     // Perform search algorithm according to search type
     if (search_type == "BFS")
     {
+        // Initialize the output struct
+        Output output;
+        output.output_file.open("output.txt");
+        output.pathlen_file.open("pathlen.txt");
+
         bfs(node_list, node_num_map, rover_energy, output);
+
+        output.output_file.close();
+        output.pathlen_file.close();
     }
 
     // Close the files in output struct
-    output.output_file.close();
-    output.pathlen_file.close();
+    // output.output_file.close();
+    // output.pathlen_file.close();
 
     return 0;
 }
