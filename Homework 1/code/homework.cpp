@@ -3,6 +3,10 @@
 #include <sstream>
 #include <map>
 #include <queue>
+#include <deque>
+#include <vector>
+#include<iomanip>
+#include<math.h>
 
 using namespace std;
 
@@ -15,7 +19,16 @@ struct Node
     vector<int> neighbors;
     int parent;
     int momentum;
-    int path_len;
+    float path_len;
+};
+
+// Custom comparator for UCS priority queue
+struct UcsNodeComparator
+{
+    bool operator()(const Node &a, const Node &b)
+    {
+        return (a.path_len > b.path_len);
+    }
 };
 
 // Struct to store output file info
@@ -40,18 +53,43 @@ bool contains(vector<Node> &vec, int &ele, int &parent, int &momemtum)
     }
     return false;
 }
-bool contains(queue<Node> q, int &ele, int &parent, int &momemtum)
+bool contains(deque<Node> &q, int &ele, int &parent, int &momemtum)
 {
-    while (!q.empty())
+    for (int i = 0; i < q.size(); i++)
     {
-        if (q.front().id == ele)
+        if (q[i].id == ele)
         {
-            if (q.front().parent == parent)
+            if (q[i].parent == parent)
                 return true;
-            if (q.front().momentum >= momemtum)
+            if (q[i].momentum >= momemtum)
                 return true;
         }
-        q.pop();
+    }
+    return false;
+}
+bool contains_ucs(vector<Node> &vec, int &ele, int &parent, int &momemtum, float &path_len)
+{
+    for (int i = 0; i < vec.size(); i++)
+    {
+        if (vec[i].id == ele)
+        {
+            if (vec[i].parent == parent) return true;
+            if (vec[i].path_len <= path_len)
+            {
+                if (vec[i].momentum >= momemtum) return true;
+            }
+        }
+    }
+    return false;
+}
+bool contains_ucs(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int &parent, int &momemtum, float &path_len)
+{
+    for (int i = 0; i < vec_map[ele].size(); i++)
+    {
+       if (vec[vec_map[ele][i]].path_len <= path_len)
+        {
+            if (vec[vec_map[ele][i]].momentum >= momemtum) return true;
+        }
     }
     return false;
 }
@@ -92,9 +130,9 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     // Initialize clock functions
     clock_t start, end;
     vector<double> open_time, close_time;
-    
+
     // Initialize open queue
-    queue<Node> open;
+    deque<Node> open;
 
     // Initialize visited array
     vector<Node> visited;
@@ -104,7 +142,7 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     start_node.parent = -1;
     start_node.path_len = 0;
     start_node.momentum = 0;
-    open.push(start_node);
+    open.push_back(start_node);
 
     // Main loop
     while (true)
@@ -121,7 +159,7 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
         // Get the front node from open queue
         Node curr_node = open.front();
-        open.pop();
+        open.pop_front();
 
         // Add node to visited array
         visited.push_back(curr_node);
@@ -153,7 +191,8 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             end = clock();
             double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
             close_time.push_back(time_taken);
-            if (x) continue;
+            if (x)
+                continue;
 
             // Check if child is in open queue
             start = clock();
@@ -161,7 +200,8 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             end = clock();
             time_taken = double(end - start) / double(CLOCKS_PER_SEC);
             open_time.push_back(time_taken);
-            if (x) continue;
+            if (x)
+                continue;
 
             // Check if child is reachable
             int energy_req = child_node.z - curr_node.z;
@@ -175,10 +215,10 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             child_node.path_len = curr_node.path_len + 1;
 
             // Add child to open queue
-            open.push(child_node);
+            open.push_back(child_node);
         }
     }
-    
+
     double time_taken_open = 0;
     for (int i = 0; i < open_time.size(); i++)
     {
@@ -192,10 +232,143 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     }
 
     cout << endl;
-    cout << "Total time taken for open queue is : " << fixed 
+    cout << "Total time taken for open queue is : " << fixed
          << time_taken_open << setprecision(5);
     cout << " sec " << endl;
-    cout << "Total time taken for close array is : " << fixed 
+    cout << "Total time taken for close array is : " << fixed
+         << time_taken_close << setprecision(5);
+    cout << " sec " << endl;
+}
+
+// Function to compute euclidean distance
+double euc_dist(int x1, int y1, int x2, int y2)
+{
+    return sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
+}
+
+// Function to perform uniform-cost search
+void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
+{
+    // Initialize clock functions
+    clock_t start, end;
+    vector<double> open_time, close_time;
+
+    // Initialize open priority queue
+    priority_queue<Node, vector<Node>, UcsNodeComparator> open_pq;
+    // Initialize shadow open queue to use instead of open queue for contains function
+    vector<Node> open_pq_shadow;
+
+    // Initialize visited array
+    vector<Node> visited;
+    // Initialize map for visited array
+    map< int, vector<int> > visited_map;
+
+    // Add start node to open queue
+    Node start_node = node_list[node_num_map["start"]];
+    start_node.parent = -1;
+    start_node.path_len = 0;
+    start_node.momentum = 0;
+    open_pq.push(start_node);
+    open_pq_shadow.push_back(start_node);
+
+    // Main loop
+    while (true)
+    {
+        // If open queue is empty then return FAIL
+        if (open_pq.empty())
+        {
+            output.output_file << "FAIL" << endl;
+            cout << "FAIL" << endl;
+            output.pathlen_file << -1 << endl;
+            cout << "Path lenght: " << -1 << endl;
+            break;
+        }
+
+        // Get the front node from open priority queue
+        Node curr_node = open_pq.top();
+        open_pq.pop();
+        cout << curr_node.name << "\t\t" << visited.size() << "/" << node_list.size();
+        cout << "\t" << curr_node.path_len << endl;
+
+        // Add node to visited array
+        visited.push_back(curr_node);
+        // Add to visited map
+        visited_map[curr_node.id].push_back(visited.size() - 1);
+
+        // If we have reached goal state then return path
+        if (curr_node.name == "goal")
+        {
+            cout << "Goal reached!" << endl;
+            print_path(visited, curr_node, output);
+            break;
+        }
+
+        // Expand the current node
+        vector<int> children = curr_node.neighbors;
+        for (int i = 0; i < children.size(); i++)
+        {
+            int child = children[i];
+            int parent_idx = visited.size() - 1;
+
+            // Get the child node
+            Node child_node = node_list[child];
+            
+            // Calculate momentum for the child
+            child_node.momentum = max(0, curr_node.z - child_node.z);
+
+            // Compute path length for the child
+            child_node.path_len = curr_node.path_len + euc_dist(curr_node.x, curr_node.y, child_node.x, child_node.y);
+
+            // Check if child is in visited array
+            start = clock();
+            // bool x = contains(visited, child, parent_idx, child_node.momentum);
+            bool x = contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len);
+            end = clock();
+            double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+            close_time.push_back(time_taken);
+            if (x)
+                continue;
+
+            // Check if child is in open priority queue
+            start = clock();
+            x = contains_ucs(open_pq_shadow, child, parent_idx, child_node.momentum, child_node.path_len);
+            end = clock();
+            time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+            open_time.push_back(time_taken);
+            if (x)
+                continue;
+
+            // Check if child is reachable
+            int energy_req = child_node.z - curr_node.z;
+            if (curr_node.momentum + energy_limit < energy_req)
+                continue;
+
+            // Compute parent of the child
+            child_node.parent = parent_idx;
+
+            // Add child to open queue
+            // open.push_back(child_node);
+            open_pq.push(child_node);
+        }
+    }
+
+    double time_taken_open = 0;
+    for (int i = 0; i < open_time.size(); i++)
+    {
+        time_taken_open += open_time[i];
+    }
+
+    double time_taken_close = 0;
+    for (int i = 0; i < close_time.size(); i++)
+    {
+        time_taken_close += close_time[i];
+    }
+
+    cout << endl;
+    cout << "Total time taken for open queue is : " << fixed
+         << time_taken_open << setprecision(5);
+    cout << " sec " << endl;
+    cout << "Total time taken for close array is : " << fixed
          << time_taken_close << setprecision(5);
     cout << " sec " << endl;
 }
@@ -275,6 +448,18 @@ int main()
         output.pathlen_file.open("pathlen.txt");
 
         bfs(node_list, node_num_map, rover_energy, output);
+
+        output.output_file.close();
+        output.pathlen_file.close();
+    }
+    else if (search_type == "UCS")
+    {
+        // Initialize the output struct
+        Output output;
+        output.output_file.open("output.txt");
+        output.pathlen_file.open("pathlen.txt");
+
+        ucs(node_list, node_num_map, rover_energy, output);
 
         output.output_file.close();
         output.pathlen_file.close();
