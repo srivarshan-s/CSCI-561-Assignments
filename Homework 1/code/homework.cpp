@@ -5,7 +5,6 @@
 #include <queue>
 #include <deque>
 #include <vector>
-#include <iomanip>
 #include <math.h>
 
 using namespace std;
@@ -138,10 +137,6 @@ void print_path(vector<Node> &visited, Node &node, Output &output)
 // Function to perform breadth-first search
 void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
 {
-    // Initialize clock functions
-    clock_t start, end;
-    vector<double> open_time, close_time;
-
     // Initialize open queue
     deque<Node> open;
     // Initialize map for open queue
@@ -203,21 +198,11 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             child_node.momentum = max(0, curr_node.z - child_node.z);
 
             // Check if child is in visited array
-            start = clock();
-            bool x = contains(visited, visited_map, child, parent_idx, child_node.momentum);
-            end = clock();
-            double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-            close_time.push_back(time_taken);
-            if (x)
+            if (contains(visited, visited_map, child, parent_idx, child_node.momentum))
                 continue;
 
             // Check if child is in open queue
-            start = clock();
-            x = contains(open_map, child, parent_idx, child_node.momentum);
-            end = clock();
-            time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-            open_time.push_back(time_taken);
-            if (x)
+            if (contains(open_map, child, parent_idx, child_node.momentum))
                 continue;
 
             // Check if child is reachable
@@ -236,26 +221,6 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             open_map[child_node.id].push_back(child_node);
         }
     }
-
-    double time_taken_open = 0;
-    for (int i = 0; i < open_time.size(); i++)
-    {
-        time_taken_open += open_time[i];
-    }
-
-    double time_taken_close = 0;
-    for (int i = 0; i < close_time.size(); i++)
-    {
-        time_taken_close += close_time[i];
-    }
-
-    cout << endl;
-    cout << "Total time taken for open queue is : " << fixed
-         << time_taken_open << setprecision(5);
-    cout << " sec " << endl;
-    cout << "Total time taken for close array is : " << fixed
-         << time_taken_close << setprecision(5);
-    cout << " sec " << endl;
 }
 
 // Function to compute euclidean distance
@@ -271,10 +236,6 @@ double euc_dist(int x1, int y1, int z1, int x2, int y2, int z2)
 // Function to perform uniform-cost search
 void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
 {
-    // Initialize clock functions
-    clock_t start, end;
-    vector<double> open_time, close_time;
-
     // Initialize open priority queue
     priority_queue<Node, vector<Node>, UcsNodeComparator> open;
     // Initialize map for open queue
@@ -340,21 +301,11 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             child_node.path_len = curr_node.path_len + euc_dist(curr_node.x, curr_node.y, child_node.x, child_node.y);
 
             // Check if child is in visited array
-            start = clock();
-            bool x = contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len);
-            end = clock();
-            double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-            close_time.push_back(time_taken);
-            if (x)
+            if (contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len))
                 continue;
 
             // Check if child is in open priority queue
-            start = clock();
-            x = contains_ucs(open_map, child, parent_idx, child_node.momentum, child_node.path_len);
-            end = clock();
-            time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-            open_time.push_back(time_taken);
-            if (x)
+            if (contains_ucs(open_map, child, parent_idx, child_node.momentum, child_node.path_len))
                 continue;
 
             // Check if child is reachable
@@ -370,26 +321,6 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             open_map[child_node.id].push_back(child_node);
         }
     }
-
-    double time_taken_open = 0;
-    for (int i = 0; i < open_time.size(); i++)
-    {
-        time_taken_open += open_time[i];
-    }
-
-    double time_taken_close = 0;
-    for (int i = 0; i < close_time.size(); i++)
-    {
-        time_taken_close += close_time[i];
-    }
-
-    cout << endl;
-    cout << "Total time taken for open queue is : " << fixed
-         << time_taken_open << setprecision(5);
-    cout << " sec " << endl;
-    cout << "Total time taken for close array is : " << fixed
-         << time_taken_close << setprecision(5);
-    cout << " sec " << endl;
 }
 
 // Evaluation function for heuristic search
@@ -401,10 +332,6 @@ float eval_func(Node &n1, Node &n2)
 // Function to perform a* search
 void a_star(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
 {
-    // Initialize clock functions
-    clock_t start, end;
-    vector<double> open_time, close_time;
-
     // Initialize open priority queue
     priority_queue<Node, vector<Node>, AStarNodeComparator> open;
     // Initialize map for open queue
@@ -474,21 +401,11 @@ void a_star(vector<Node> &node_list, map<string, int> &node_num_map, int energy_
             child_node.path_len = curr_node.path_len + euc_dist(curr_node.x, curr_node.y, curr_node.z, child_node.x, child_node.y, child_node.z);
 
             // Check if child is in visited array
-            start = clock();
-            bool x = contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len);
-            end = clock();
-            double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-            close_time.push_back(time_taken);
-            if (x)
+            if (contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len))
                 continue;
 
             // Check if child is in open priority queue
-            start = clock();
-            x = contains_ucs(open_map, child, parent_idx, child_node.momentum, child_node.path_len);
-            end = clock();
-            time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-            open_time.push_back(time_taken);
-            if (x)
+            if (contains_ucs(open_map, child, parent_idx, child_node.momentum, child_node.path_len))
                 continue;
 
             // Check if child is reachable
@@ -507,26 +424,6 @@ void a_star(vector<Node> &node_list, map<string, int> &node_num_map, int energy_
             open_map[child_node.id].push_back(child_node);
         }
     }
-
-    double time_taken_open = 0;
-    for (int i = 0; i < open_time.size(); i++)
-    {
-        time_taken_open += open_time[i];
-    }
-
-    double time_taken_close = 0;
-    for (int i = 0; i < close_time.size(); i++)
-    {
-        time_taken_close += close_time[i];
-    }
-
-    cout << endl;
-    cout << "Total time taken for open queue is : " << fixed
-         << time_taken_open << setprecision(5);
-    cout << " sec " << endl;
-    cout << "Total time taken for close array is : " << fixed
-         << time_taken_close << setprecision(5);
-    cout << " sec " << endl;
 }
 
 int main()
