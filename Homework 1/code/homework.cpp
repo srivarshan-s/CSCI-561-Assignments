@@ -31,6 +31,12 @@ struct UcsNodeComparator
     }
 };
 
+// Custom priority queue for UCS
+class custom_priority_queue: public priority_queue<Node, vector<Node>, UcsNodeComparator> {
+public:
+    vector<Node> &impl() { return c; }
+};
+
 // Struct to store output file info
 struct Output
 {
@@ -67,17 +73,13 @@ bool contains(deque<Node> &q, int &ele, int &parent, int &momemtum)
     }
     return false;
 }
-bool contains_ucs(vector<Node> &vec, int &ele, int &parent, int &momemtum, float &path_len)
+bool contains_ucs(map< int, vector<Node> > &cpq_map, int &ele, int &parent, int &momemtum, float &path_len)
 {
-    for (int i = 0; i < vec.size(); i++)
+    for (int i = 0; i < cpq_map[ele].size(); i++)
     {
-        if (vec[i].id == ele)
+       if (cpq_map[ele][i].path_len <= path_len)
         {
-            if (vec[i].parent == parent) return true;
-            if (vec[i].path_len <= path_len)
-            {
-                if (vec[i].momentum >= momemtum) return true;
-            }
+            if (cpq_map[ele][i].momentum >= momemtum) return true;
         }
     }
     return false;
@@ -254,9 +256,9 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     vector<double> open_time, close_time;
 
     // Initialize open priority queue
-    priority_queue<Node, vector<Node>, UcsNodeComparator> open_pq;
-    // Initialize shadow open queue to use instead of open queue for contains function
-    vector<Node> open_pq_shadow;
+    custom_priority_queue open;
+    // Initialize map for open queue
+    map< int, vector<Node> > open_map;
 
     // Initialize visited array
     vector<Node> visited;
@@ -268,14 +270,14 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     start_node.parent = -1;
     start_node.path_len = 0;
     start_node.momentum = 0;
-    open_pq.push(start_node);
-    open_pq_shadow.push_back(start_node);
+    open.push(start_node);
+    open_map[start_node.id].push_back(start_node);
 
     // Main loop
     while (true)
     {
         // If open queue is empty then return FAIL
-        if (open_pq.empty())
+        if (open.empty())
         {
             output.output_file << "FAIL" << endl;
             cout << "FAIL" << endl;
@@ -285,10 +287,8 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
         }
 
         // Get the front node from open priority queue
-        Node curr_node = open_pq.top();
-        open_pq.pop();
-        cout << curr_node.name << "\t\t" << visited.size() << "/" << node_list.size();
-        cout << "\t" << curr_node.path_len << endl;
+        Node curr_node = open.top();
+        open.pop();
 
         // Add node to visited array
         visited.push_back(curr_node);
@@ -321,7 +321,6 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
             // Check if child is in visited array
             start = clock();
-            // bool x = contains(visited, child, parent_idx, child_node.momentum);
             bool x = contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len);
             end = clock();
             double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
@@ -331,7 +330,7 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
             // Check if child is in open priority queue
             start = clock();
-            x = contains_ucs(open_pq_shadow, child, parent_idx, child_node.momentum, child_node.path_len);
+            x = contains_ucs(open_map, child, parent_idx, child_node.momentum, child_node.path_len);
             end = clock();
             time_taken = double(end - start) / double(CLOCKS_PER_SEC);
             open_time.push_back(time_taken);
@@ -347,8 +346,8 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             child_node.parent = parent_idx;
 
             // Add child to open queue
-            // open.push_back(child_node);
-            open_pq.push(child_node);
+            open.push(child_node);
+            open_map[child_node.id].push_back(child_node);
         }
     }
 
