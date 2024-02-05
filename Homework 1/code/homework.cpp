@@ -5,8 +5,8 @@
 #include <queue>
 #include <deque>
 #include <vector>
-#include<iomanip>
-#include<math.h>
+#include <iomanip>
+#include <math.h>
 
 using namespace std;
 
@@ -48,7 +48,7 @@ struct Output
     ofstream pathlen_file;
 };
 
-// Overloaded function to check if vector or queue have an element
+// Function to check if node is present in visited array - bfs
 bool contains(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int &parent, int &momemtum)
 {
     for (int i = 0; i < vec_map[ele].size(); i++)
@@ -63,6 +63,7 @@ bool contains(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int
     }
     return false;
 }
+// Function to check if node is present in open queue - bfs
 bool contains(map< int, vector<Node> > &m, int &ele, int &parent, int &momemtum)
 {
     for (int i = 0; i < m[ele].size(); i++)
@@ -77,24 +78,28 @@ bool contains(map< int, vector<Node> > &m, int &ele, int &parent, int &momemtum)
     }
     return false;
 }
+// Function to check if node is present in open priority queue - ucs & a*
 bool contains_ucs(map< int, vector<Node> > &cpq_map, int &ele, int &parent, int &momemtum, float &path_len)
 {
     for (int i = 0; i < cpq_map[ele].size(); i++)
     {
-       if (cpq_map[ele][i].path_len <= path_len)
+        if (cpq_map[ele][i].path_len <= path_len)
         {
-            if (cpq_map[ele][i].momentum >= momemtum) return true;
+            if (cpq_map[ele][i].momentum >= momemtum)
+                return true;
         }
     }
     return false;
 }
+// Function to check if node is present in visited array - ucs & a*
 bool contains_ucs(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int &parent, int &momemtum, float &path_len)
 {
     for (int i = 0; i < vec_map[ele].size(); i++)
     {
-       if (vec[vec_map[ele][i]].path_len <= path_len)
+        if (vec[vec_map[ele][i]].path_len <= path_len)
         {
-            if (vec[vec_map[ele][i]].momentum >= momemtum) return true;
+            if (vec[vec_map[ele][i]].momentum >= momemtum)
+                return true;
         }
     }
     return false;
@@ -327,7 +332,7 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
             // Get the child node
             Node child_node = node_list[child];
-            
+
             // Calculate momentum for the child
             child_node.momentum = max(0, curr_node.z - child_node.z);
 
@@ -390,7 +395,7 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 // Evaluation function for heuristic search
 float eval_func(Node &n1, Node &n2)
 {
-    return euc_dist(n1.x , n1.y, n1.z, n2.x , n2.y, n2.z);
+    return euc_dist(n1.x, n1.y, n1.z, n2.x, n2.y, n2.z);
 }
 
 // Function to perform a* search
@@ -461,7 +466,7 @@ void a_star(vector<Node> &node_list, map<string, int> &node_num_map, int energy_
 
             // Get the child node
             Node child_node = node_list[child];
-            
+
             // Calculate momentum for the child
             child_node.momentum = max(0, curr_node.z - child_node.z);
 
@@ -602,7 +607,6 @@ int main()
     else if (search_type == "A*")
     {
         a_star(node_list, node_num_map, rover_energy, output);
-
     }
 
     // Close the files in output struct
