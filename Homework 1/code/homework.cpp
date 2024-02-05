@@ -41,12 +41,6 @@ struct AStarNodeComparator
     }
 };
 
-// Custom priority queue for UCS
-class custom_priority_queue: public priority_queue<Node, vector<Node>, UcsNodeComparator> {
-public:
-    vector<Node> &impl() { return c; }
-};
-
 // Struct to store output file info
 struct Output
 {
@@ -277,7 +271,7 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     vector<double> open_time, close_time;
 
     // Initialize open priority queue
-    custom_priority_queue open;
+    priority_queue<Node, vector<Node>, UcsNodeComparator> open;
     // Initialize map for open queue
     map< int, vector<Node> > open_map;
 
