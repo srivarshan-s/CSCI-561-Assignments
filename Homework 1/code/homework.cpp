@@ -45,15 +45,15 @@ struct Output
 };
 
 // Overloaded function to check if vector or queue have an element
-bool contains(vector<Node> &vec, int &ele, int &parent, int &momemtum)
+bool contains(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int &parent, int &momemtum)
 {
-    for (int i = 0; i < vec.size(); i++)
+    for (int i = 0; i < vec_map[ele].size(); i++)
     {
-        if (vec[i].id == ele)
+        if (vec[vec_map[ele][i]].id == ele)
         {
-            if (vec[i].parent == parent)
+            if (vec[vec_map[ele][i]].parent == parent)
                 return true;
-            if (vec[i].momentum >= momemtum)
+            if (vec[vec_map[ele][i]].momentum >= momemtum)
                 return true;
         }
     }
@@ -140,6 +140,8 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
     // Initialize visited array
     vector<Node> visited;
+    // Initialize map for visited array
+    map< int, vector<int> > visited_map;
 
     // Add start node to open queue
     Node start_node = node_list[node_num_map["start"]];
@@ -168,6 +170,7 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
         // Add node to visited array
         visited.push_back(curr_node);
+        visited_map[curr_node.id].push_back(visited.size() - 1);
 
         // If we have reached goal state then return path
         if (curr_node.name == "goal")
@@ -192,7 +195,7 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
             // Check if child is in visited array
             start = clock();
-            bool x = contains(visited, child, parent_idx, child_node.momentum);
+            bool x = contains(visited, visited_map, child, parent_idx, child_node.momentum);
             end = clock();
             double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
             close_time.push_back(time_taken);
