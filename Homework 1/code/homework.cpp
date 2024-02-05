@@ -59,15 +59,15 @@ bool contains(vector<Node> &vec, int &ele, int &parent, int &momemtum)
     }
     return false;
 }
-bool contains(deque<Node> &q, int &ele, int &parent, int &momemtum)
+bool contains(map< int, vector<Node> > &m, int &ele, int &parent, int &momemtum)
 {
-    for (int i = 0; i < q.size(); i++)
+    for (int i = 0; i < m[ele].size(); i++)
     {
-        if (q[i].id == ele)
+        if (m[ele][i].id == ele)
         {
-            if (q[i].parent == parent)
+            if (m[ele][i].parent == parent)
                 return true;
-            if (q[i].momentum >= momemtum)
+            if (m[ele][i].momentum >= momemtum)
                 return true;
         }
     }
@@ -135,6 +135,8 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
     // Initialize open queue
     deque<Node> open;
+    // Initialize map for open queue
+    map< int, vector<Node> > open_map;
 
     // Initialize visited array
     vector<Node> visited;
@@ -145,6 +147,7 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
     start_node.path_len = 0;
     start_node.momentum = 0;
     open.push_back(start_node);
+    open_map[start_node.id].push_back(start_node);
 
     // Main loop
     while (true)
@@ -198,7 +201,7 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
             // Check if child is in open queue
             start = clock();
-            x = contains(open, child, parent_idx, child_node.momentum);
+            x = contains(open_map, child, parent_idx, child_node.momentum);
             end = clock();
             time_taken = double(end - start) / double(CLOCKS_PER_SEC);
             open_time.push_back(time_taken);
@@ -218,6 +221,7 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
 
             // Add child to open queue
             open.push_back(child_node);
+            open_map[child_node.id].push_back(child_node);
         }
     }
 
