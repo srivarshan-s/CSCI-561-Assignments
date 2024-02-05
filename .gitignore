@@ -1,6 +1,6 @@
 .DS_Store
 a.out
-.vscode/settings.json
+.vscode/
 homework.dSYM/
 Homework\ 1/code/input.txt
 Homework\ 1/code/output.txt
