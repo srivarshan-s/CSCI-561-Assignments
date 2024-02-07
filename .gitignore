@@ -1,7 +1,12 @@
+# Global
 .DS_Store
 a.out
 .vscode/
+.fleet/
+
+# Homework 1
 homework.dSYM/
 Homework\ 1/code/input.txt
 Homework\ 1/code/output.txt
 Homework\ 1/code/pathlen.txt
+
