@@ -1,11 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <map>
-#include <queue>
 #include <deque>
-#include <vector>
+#include <fstream>
+#include <iostream>
+#include <map>
 #include <math.h>
+#include <queue>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -48,7 +48,8 @@ struct Output
 };
 
 // Function to check if node is present in visited array - bfs
-bool contains(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int &parent, int &momemtum)
+bool contains(vector<Node> &vec, map<int, vector<int>> &vec_map, int &ele,
+              int &parent, int &momemtum)
 {
     for (int i = 0; i < vec_map[ele].size(); i++)
     {
@@ -63,7 +64,7 @@ bool contains(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int
     return false;
 }
 // Function to check if node is present in open queue - bfs
-bool contains(map< int, vector<Node> > &m, int &ele, int &parent, int &momemtum)
+bool contains(map<int, vector<Node>> &m, int &ele, int &parent, int &momemtum)
 {
     for (int i = 0; i < m[ele].size(); i++)
     {
@@ -78,7 +79,8 @@ bool contains(map< int, vector<Node> > &m, int &ele, int &parent, int &momemtum)
     return false;
 }
 // Function to check if node is present in open priority queue - ucs & a*
-bool contains_ucs(map< int, vector<Node> > &cpq_map, int &ele, int &parent, int &momemtum, float &path_len)
+bool contains_ucs(map<int, vector<Node>> &cpq_map, int &ele, int &parent,
+                  int &momemtum, float &path_len)
 {
     for (int i = 0; i < cpq_map[ele].size(); i++)
     {
@@ -91,7 +93,8 @@ bool contains_ucs(map< int, vector<Node> > &cpq_map, int &ele, int &parent, int 
     return false;
 }
 // Function to check if node is present in visited array - ucs & a*
-bool contains_ucs(vector<Node> &vec, map< int, vector<int> > &vec_map, int &ele, int &parent, int &momemtum, float &path_len)
+bool contains_ucs(vector<Node> &vec, map<int, vector<int>> &vec_map, int &ele,
+                  int &parent, int &momemtum, float &path_len)
 {
     for (int i = 0; i < vec_map[ele].size(); i++)
     {
@@ -135,17 +138,18 @@ void print_path(vector<Node> &visited, Node &node, Output &output)
 }
 
 // Function to perform breadth-first search
-void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
+void bfs(vector<Node> &node_list, map<string, int> &node_num_map,
+         int energy_limit, Output &output)
 {
     // Initialize open queue
     deque<Node> open;
     // Initialize map for open queue
-    map< int, vector<Node> > open_map;
+    map<int, vector<Node>> open_map;
 
     // Initialize visited array
     vector<Node> visited;
     // Initialize map for visited array
-    map< int, vector<int> > visited_map;
+    map<int, vector<int>> visited_map;
 
     // Add start node to open queue
     Node start_node = node_list[node_num_map["start"]];
@@ -198,7 +202,8 @@ void bfs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             child_node.momentum = max(0, curr_node.z - child_node.z);
 
             // Check if child is in visited array
-            if (contains(visited, visited_map, child, parent_idx, child_node.momentum))
+            if (contains(visited, visited_map, child, parent_idx,
+                         child_node.momentum))
                 continue;
 
             // Check if child is in open queue
@@ -234,17 +239,18 @@ double euc_dist(int x1, int y1, int z1, int x2, int y2, int z2)
 }
 
 // Function to perform uniform-cost search
-void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
+void ucs(vector<Node> &node_list, map<string, int> &node_num_map,
+         int energy_limit, Output &output)
 {
     // Initialize open priority queue
     priority_queue<Node, vector<Node>, UcsNodeComparator> open;
     // Initialize map for open queue
-    map< int, vector<Node> > open_map;
+    map<int, vector<Node>> open_map;
 
     // Initialize visited array
     vector<Node> visited;
     // Initialize map for visited array
-    map< int, vector<int> > visited_map;
+    map<int, vector<int>> visited_map;
 
     // Add start node to open queue
     Node start_node = node_list[node_num_map["start"]];
@@ -298,14 +304,18 @@ void ucs(vector<Node> &node_list, map<string, int> &node_num_map, int energy_lim
             child_node.momentum = max(0, curr_node.z - child_node.z);
 
             // Compute path length for the child
-            child_node.path_len = curr_node.path_len + euc_dist(curr_node.x, curr_node.y, child_node.x, child_node.y);
+            child_node.path_len =
+                curr_node.path_len +
+                euc_dist(curr_node.x, curr_node.y, child_node.x, child_node.y);
 
             // Check if child is in visited array
-            if (contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len))
+            if (contains_ucs(visited, visited_map, child, parent_idx,
+                             child_node.momentum, child_node.path_len))
                 continue;
 
             // Check if child is in open priority queue
-            if (contains_ucs(open_map, child, parent_idx, child_node.momentum, child_node.path_len))
+            if (contains_ucs(open_map, child, parent_idx, child_node.momentum,
+                             child_node.path_len))
                 continue;
 
             // Check if child is reachable
@@ -330,17 +340,18 @@ float eval_func(Node &n1, Node &n2)
 }
 
 // Function to perform a* search
-void a_star(vector<Node> &node_list, map<string, int> &node_num_map, int energy_limit, Output &output)
+void a_star(vector<Node> &node_list, map<string, int> &node_num_map,
+            int energy_limit, Output &output)
 {
     // Initialize open priority queue
     priority_queue<Node, vector<Node>, AStarNodeComparator> open;
     // Initialize map for open queue
-    map< int, vector<Node> > open_map;
+    map<int, vector<Node>> open_map;
 
     // Initialize visited array
     vector<Node> visited;
     // Initialize map for visited array
-    map< int, vector<int> > visited_map;
+    map<int, vector<int>> visited_map;
 
     // Get the goal node for the heuristic function
     Node goal_node = node_list[node_num_map["goal"]];
@@ -398,14 +409,18 @@ void a_star(vector<Node> &node_list, map<string, int> &node_num_map, int energy_
             child_node.momentum = max(0, curr_node.z - child_node.z);
 
             // Compute path length for the child
-            child_node.path_len = curr_node.path_len + euc_dist(curr_node.x, curr_node.y, curr_node.z, child_node.x, child_node.y, child_node.z);
+            child_node.path_len = curr_node.path_len +
+                                  euc_dist(curr_node.x, curr_node.y, curr_node.z,
+                                           child_node.x, child_node.y, child_node.z);
 
             // Check if child is in visited array
-            if (contains_ucs(visited, visited_map, child, parent_idx, child_node.momentum, child_node.path_len))
+            if (contains_ucs(visited, visited_map, child, parent_idx,
+                             child_node.momentum, child_node.path_len))
                 continue;
 
             // Check if child is in open priority queue
-            if (contains_ucs(open_map, child, parent_idx, child_node.momentum, child_node.path_len))
+            if (contains_ucs(open_map, child, parent_idx, child_node.momentum,
+                             child_node.path_len))
                 continue;
 
             // Check if child is reachable
@@ -417,7 +432,8 @@ void a_star(vector<Node> &node_list, map<string, int> &node_num_map, int energy_
             child_node.parent = parent_idx;
 
             // Compute estimated total path length
-            child_node.estm_total_path_len = child_node.path_len + eval_func(child_node, goal_node);
+            child_node.estm_total_path_len =
+                child_node.path_len + eval_func(child_node, goal_node);
 
             // Add child to open queue
             open.push(child_node);
