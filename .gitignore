@@ -3,10 +3,13 @@
 a.out
 .vscode/
 .fleet/
+.idea/
+cmake-build-debug/
 
 # Homework 1
 homework.dSYM/
 Homework\ 1/code/input.txt
 Homework\ 1/code/output.txt
 Homework\ 1/code/pathlen.txt
+
 
