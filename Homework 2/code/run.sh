@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Compile the homework.cpp file
-g++ -std=c++17 homework.cpp -o main
+# Compile the program
+g++ -std=c++17 main.cpp -o main
 
 # Run the compiled program
 time ./main
 
-# Remove the compiled file
+# Remove the compiled program
 rm main
