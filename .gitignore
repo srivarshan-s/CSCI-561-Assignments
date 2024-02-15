@@ -5,6 +5,7 @@ a.out
 .fleet/
 .idea/
 cmake-build-debug/
+*.dSYM/
 
 # Homework 1
 homework.dSYM/
