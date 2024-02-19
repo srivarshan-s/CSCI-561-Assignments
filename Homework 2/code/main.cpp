@@ -14,6 +14,7 @@ private:
     vector<vector<char>> board;
     char player;
     char opponent;
+    int value;
 
 public:
     // Constructor
@@ -22,6 +23,7 @@ public:
         this->board = board;
         this->player = player;
         this->opponent = opponent;
+        this->value = this->evaluate();
     }
 
     // Function to print the state of the board
