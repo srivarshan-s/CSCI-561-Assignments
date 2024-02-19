@@ -12,24 +12,56 @@ class GameState
 {
 private:
     vector<vector<char>> board;
+    char player;
+    char opponent;
 
 public:
-    GameState(vector<vector<char>> &board)
+    // Constructor
+    GameState(vector<vector<char>> board, char player, char opponent)
     {
         this->board = board;
+        this->player = player;
+        this->opponent = opponent;
     }
+
     // Function to print the state of the board
     void print_board()
     {
-        for (int i = 0; i < board.size(); i++)
+        for (int i = 0; i < BOARD_SIZE; i++)
         {
-            vector<char> board_line = board[i];
-            for (int j = 0; j < board_line.size(); j++)
+            for (int j = 0; j < BOARD_SIZE; j++)
             {
-                cout << board_line[j] << "    ";
+                cout << this->board[i][j] << "    ";
             }
             cout << "\n\n";
         }
+    }
+
+    // Function to evaluate the state of the board
+    int evaluate()
+    {
+        int val;
+        // Count the number of X and O
+        int num_x = 0;
+        int num_o = 0;
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            for (int j = 0; j < BOARD_SIZE; j++)
+            {
+                if (this->board[i][j] == 'X')
+                    num_x++;
+                if (this->board[i][j] == 'O')
+                    num_o++;
+            }
+        }
+        // Since O always starts X get +1 bonus
+        num_x++;
+        // Value is difference between num of X and O
+        if (player == 'X')
+            val = num_x - num_o;
+        else
+            val = num_o - num_x;
+        return val;
     }
 };
 
@@ -63,7 +95,10 @@ int main()
         }
         board.push_back(board_line);
     }
-    GameState start_state(board);
+
+    // Initialize GameState object
+    GameState start_state(board, player[0], opponent[0]);
     start_state.print_board();
+
     return 0;
 }
