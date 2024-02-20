@@ -7,6 +7,11 @@ using namespace std;
 // Global constant to declare the board size
 const int BOARD_SIZE = 12;
 
+// Global constants for board cells
+const char WHITE = 'O';
+const char BLACK = 'X';
+const char EMPTY = '.';
+
 // Class to maintain game state
 class GameState
 {
@@ -45,26 +50,26 @@ public:
     int evaluate()
     {
         int val;
-        // Count the number of X and O
-        int num_x = 0;
-        int num_o = 0;
+        // Count the number of white and black
+        int num_white = 0;
+        int num_black = 0;
         for (int i = 0; i < BOARD_SIZE; i++)
         {
             for (int j = 0; j < BOARD_SIZE; j++)
             {
-                if (this->board[i][j] == 'X')
-                    num_x++;
-                if (this->board[i][j] == 'O')
-                    num_o++;
+                if (this->board[i][j] == WHITE)
+                    num_white++;
+                if (this->board[i][j] == BLACK)
+                    num_black++;
             }
         }
-        // Since O always starts X get +1 bonus
-        num_x++;
-        // Value is difference between num of X and O
-        if (player == 'X')
-            val = num_x - num_o;
+        // Since white always starts black get +1 bonus
+        num_black++;
+        // Value is difference between num of white and black
+        if (player == WHITE)
+            val = num_white - num_black;
         else
-            val = num_o - num_x;
+            val = num_black - num_white;
         return val;
     }
 
