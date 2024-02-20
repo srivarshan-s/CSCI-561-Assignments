@@ -15,15 +15,17 @@ private:
     char player;
     char opponent;
     int value;
+    bool player_turn;
 
 public:
     // Constructor
-    GameState(vector<vector<char>> board, char player, char opponent)
+    GameState(vector<vector<char>> board, char player, char opponent, bool turn)
     {
         this->board = board;
         this->player = player;
         this->opponent = opponent;
         this->value = this->evaluate();
+        this->player_turn = turn;
     }
 
     // Function to print the state of the board
@@ -99,7 +101,7 @@ int main()
     }
 
     // Initialize GameState object
-    GameState start_state(board, player[0], opponent[0]);
+    GameState start_state(board, player[0], opponent[0], true);
     start_state.print_board();
 
     return 0;
