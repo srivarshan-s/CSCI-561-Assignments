@@ -67,6 +67,39 @@ public:
             val = num_o - num_x;
         return val;
     }
+
+    // Function to return the valid moves
+    vector<pair<int, int>> valid_moves()
+    {
+        vector<pair<int, int>> moves;
+        // Iterate through the board cells
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            for (int j = 0; j < BOARD_SIZE; j++)
+            {
+                // Check if cell is empty
+                if (board[i][j] == EMPTY)
+                {
+                    // Check if any one of the adjacent cells are filled
+                    bool flag = false;
+                    for (int x = i - 1; x <= i + 1; x++)
+                    {
+                        for (int y = j - 1; y <= j + 1; y++)
+                        {
+                            int x_idx, y_idx;
+                            x_idx = max(0, min(x, BOARD_SIZE - 1));
+                            y_idx = max(0, min(y, BOARD_SIZE - 1));
+                            if (board[x_idx][y_idx] == WHITE || board[x_idx][y_idx] == BLACK)
+                                flag = true;
+                        }
+                    }
+                    if (flag)
+                        moves.push_back(make_pair(i, j));
+                }
+            }
+        }
+        return moves;
+    }
 };
 
 int main()
