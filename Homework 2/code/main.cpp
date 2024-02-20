@@ -76,7 +76,14 @@ public:
     // Function to return the valid moves
     vector<pair<int, int>> valid_moves()
     {
+        // Initialize vector to store moves
         vector<pair<int, int>> moves;
+        // Choose white or black to check acccording to player turn
+        char cell_to_check;
+        if(player_turn)
+            cell_to_check = this->opponent;
+        else
+            cell_to_check = this->player;
         // Iterate through the board cells
         for (int i = 0; i < BOARD_SIZE; i++)
         {
@@ -85,16 +92,18 @@ public:
                 // Check if cell is empty
                 if (board[i][j] == EMPTY)
                 {
-                    // Check if any one of the adjacent cells are filled
+                    // Check if any one of the adjacent cells are filled with cell_to_check
                     bool flag = false;
                     for (int x = i - 1; x <= i + 1; x++)
                     {
                         for (int y = j - 1; y <= j + 1; y++)
                         {
+                            if (x == i && y == j)
+                                continue;
                             int x_idx, y_idx;
                             x_idx = max(0, min(x, BOARD_SIZE - 1));
                             y_idx = max(0, min(y, BOARD_SIZE - 1));
-                            if (board[x_idx][y_idx] == WHITE || board[x_idx][y_idx] == BLACK)
+                            if (board[x_idx][y_idx] == cell_to_check)
                                 flag = true;
                         }
                     }
@@ -141,6 +150,7 @@ int main()
     // Initialize GameState object
     GameState start_state(board, player[0], opponent[0], true);
     start_state.print_board();
+    start_state.valid_moves();
 
     return 0;
 }
