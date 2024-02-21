@@ -80,7 +80,7 @@ public:
         vector<pair<int, int>> moves;
         // Choose white or black to check acccording to player turn
         char cell_to_check, cell_to_flip;
-        if(player_turn)
+        if (player_turn)
         {
             cell_to_check = this->opponent;
             cell_to_flip = this->player;
@@ -99,14 +99,16 @@ public:
                 if (board[i][j] == EMPTY)
                 {
                     bool flag = false;
+                    int x, y;
 
                     // Check left of empty cell
-                    if (j - 1 > 0 && board[i][j-1] == cell_to_check)
+                    if (j - 1 > 0 && board[i][j - 1] == cell_to_check)
                     {
                         // Check left cells till cell_to_flip is reached
-                        for (int y = j - 1; y >= 0; y--)
+                        for (y = j - 1; y >= 0; y--)
                         {
-                            if (board[i][y] == EMPTY) break;
+                            if (board[i][y] == EMPTY)
+                                break;
                             if (board[i][y] == cell_to_flip)
                             {
                                 flag = true;
@@ -121,12 +123,13 @@ public:
                     }
 
                     // Check right of empty cell
-                    if (j + 1 < BOARD_SIZE - 1 && board[i][j+1] == cell_to_check)
+                    if (j + 1 < BOARD_SIZE - 1 && board[i][j + 1] == cell_to_check)
                     {
                         // Check right cells till cell_to_flip is reached
-                        for (int y = j + 1; y < BOARD_SIZE; y++)
+                        for (y = j + 1; y < BOARD_SIZE; y++)
                         {
-                            if (board[i][y] == EMPTY) break;
+                            if (board[i][y] == EMPTY)
+                                break;
                             if (board[i][y] == cell_to_flip)
                             {
                                 flag = true;
@@ -141,12 +144,13 @@ public:
                     }
 
                     // Check up of empty cell
-                    if (i - 1 > 0 && board[i-1][j] == cell_to_check)
+                    if (i - 1 > 0 && board[i - 1][j] == cell_to_check)
                     {
                         // Check upper cells till cell_to_flip is reached
-                        for (int x = i - 1; x >= 0; x--)
+                        for (x = i - 1; x >= 0; x--)
                         {
-                            if (board[x][j] == EMPTY) break;
+                            if (board[x][j] == EMPTY)
+                                break;
                             if (board[x][j] == cell_to_flip)
                             {
                                 flag = true;
@@ -161,13 +165,98 @@ public:
                     }
 
                     // Check down of empty cell
-                    if (i + 1 < BOARD_SIZE - 1 && board[i+1][j] == cell_to_check)
+                    if (i + 1 < BOARD_SIZE - 1 && board[i + 1][j] == cell_to_check)
                     {
                         // Check lower cells till cell_to_flip is reached
-                        for (int x = i + 1; x < BOARD_SIZE; x++)
+                        for (x = i + 1; x < BOARD_SIZE; x++)
                         {
-                            if (board[x][j] == EMPTY) break;
+                            if (board[x][j] == EMPTY)
+                                break;
                             if (board[x][j] == cell_to_flip)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (flag)
+                    {
+                        moves.push_back(make_pair(i, j));
+                        continue;
+                    }
+
+                    // Check top left of empty cell
+                    if (i - 1 > 0 && j - 1 > 0 && board[i - 1][j - 1] == cell_to_check)
+                    {
+                        // Check further cells till cell_to_flip is reached
+                        for (x = i - 1, y = j - 1; x >= 0 && y >= 0; x--, y--)
+                        {
+                            if (board[x][y] == EMPTY)
+                                break;
+                            if (board[x][y] == cell_to_flip)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (flag)
+                    {
+                        moves.push_back(make_pair(i, j));
+                        continue;
+                    }
+
+                    // Check top right of empty cell
+                    if (i - 1 > 0 && j + 1 < BOARD_SIZE - 1 && board[i - 1][j + 1] == cell_to_check)
+                    {
+                        // Check further cells till cell_to_flip is reached
+                        for (x = i - 1, y = j + 1; x >= 0 && y < BOARD_SIZE; x--, y++)
+                        {
+                            if (board[x][y] == EMPTY)
+                                break;
+                            if (board[x][y] == cell_to_flip)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (flag)
+                    {
+                        moves.push_back(make_pair(i, j));
+                        continue;
+                    }
+
+                    // Check bottom left of empty cell
+                    if (i + 1 < BOARD_SIZE - 1 && j - 1 > 0 && board[i + 1][j - 1] == cell_to_check)
+                    {
+                        // Check further cells till cell_to_flip is reached
+                        for (x = i + 1, y = j - 1; x < BOARD_SIZE && y >= 0; x++, y--)
+                        {
+                            if (board[x][y] == EMPTY)
+                                break;
+                            if (board[x][y] == cell_to_flip)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (flag)
+                    {
+                        moves.push_back(make_pair(i, j));
+                        continue;
+                    }
+
+                    // Check bottom right of empty cell
+                    if (i + 1 < BOARD_SIZE - 1 && j + 1 < BOARD_SIZE - 1 && board[i + 1][j + 1] == cell_to_check)
+                    {
+                        // Check further cells till cell_to_flip is reached
+                        for (x = i + 1, y = j + 1; x < BOARD_SIZE && y < BOARD_SIZE; x++, y++)
+                        {
+                            if (board[x][y] == EMPTY)
+                                break;
+                            if (board[x][y] == cell_to_flip)
                             {
                                 flag = true;
                                 break;
