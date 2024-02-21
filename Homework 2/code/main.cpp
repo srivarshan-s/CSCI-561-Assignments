@@ -31,6 +31,11 @@ public:
         this->player_turn = turn;
     }
 
+    // Function to return player_turn
+    bool turn() {
+        return this->player_turn;
+    }
+
     // Function to print the state of the board
     void print_board()
     {
@@ -520,8 +525,25 @@ int main()
     GameState prev_state = start_state;
     while (!moves.empty())
     {
+        int max = -999;
+        int min = 999;
+        pair<int, int> next_move = moves[0];
         cout << "NEXT MOVE" << '\n';
-        GameState next_state = prev_state.play(moves[0]);
+        for (auto move: moves) {
+            GameState temp_state = prev_state.play(move);
+            int val = temp_state.evaluate();
+            if (prev_state.turn() && val > max)
+            {
+                max = val;
+                next_move = move;
+            }
+            if (!prev_state.turn() && val < min)
+            {
+                min = val;
+                next_move = move;
+            }
+        }
+        GameState next_state = prev_state.play(next_move);
         next_state.print_board();
         prev_state = next_state;
         moves = prev_state.valid_moves();
