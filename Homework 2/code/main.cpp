@@ -513,7 +513,6 @@ int main()
     // Initialize GameState object
     GameState start_state(board, player[0], opponent[0], true);
     start_state.print_board();
-    start_state.valid_moves();
 
     return 0;
 }
