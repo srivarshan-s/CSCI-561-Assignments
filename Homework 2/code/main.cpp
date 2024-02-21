@@ -271,6 +271,212 @@ public:
         }
         return moves;
     }
+
+    // Function to apply a move
+    GameState play(pair<int, int> move)
+    {
+        vector<vector<char>> new_board = this->board;
+
+        char cell_to_flip = this->player_turn ? this->player : this->opponent;
+        int x = move.first;
+        int y = move.second;
+        new_board[x][y] = cell_to_flip;
+
+        // Check left of cell
+        if (y - 1 > 0)
+        {
+            bool flag = false;
+            int j;
+            for (j = y - 2; j >= 0; j--)
+            {
+                if (new_board[x][j] == EMPTY)
+                    break;
+                if (new_board[x][j] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; j < y; j++)
+                {
+                    new_board[x][j] = cell_to_flip;
+                }
+            }
+        }
+
+        // Check right of cell
+        if (y + 1 < BOARD_SIZE - 1)
+        {
+            bool flag = false;
+            int j;
+            for (j = y + 2; j < BOARD_SIZE; j++)
+            {
+                if (new_board[x][j] == EMPTY)
+                    break;
+                if (new_board[x][j] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; j > y; j--)
+                {
+                    new_board[x][j] = cell_to_flip;
+                }
+            }
+        }
+
+        // Check top of cell
+        if (x - 1 > 0)
+        {
+            bool flag = false;
+            int i;
+            for (i = x - 2; i >= 0; i--)
+            {
+                if (new_board[i][y] == EMPTY)
+                    break;
+                if (new_board[i][y] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; i < x; i++)
+                {
+                    new_board[i][y] = cell_to_flip;
+                }
+            }
+        }
+
+        // Check bottom of cell
+        if (x + 1 < BOARD_SIZE - 1)
+        {
+            bool flag = false;
+            int i;
+            for (i = x + 2; i < BOARD_SIZE; i++)
+            {
+                if (new_board[i][y] == EMPTY)
+                    break;
+                if (new_board[i][y] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; i > x; i--)
+                {
+                    new_board[i][y] = cell_to_flip;
+                }
+            }
+        }
+
+        // Check top left of cell
+        if (x - 1 > 0 && y - 1 > 0)
+        {
+            bool flag = false;
+            int i, j;
+            for (i = x - 2, j = y - 2; i >= 0 && j >= 0; i--, j--)
+            {
+                if (new_board[i][j] == EMPTY)
+                    break;
+                if (new_board[i][j] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; i < x && j < y; i++, j++)
+                {
+                    new_board[i][j] = cell_to_flip;
+                }
+            }
+        }
+
+        // Check top right of cell
+        if (x - 1 > 0 && y + 1 < BOARD_SIZE - 1)
+        {
+            bool flag = false;
+            int i, j;
+            for (i = x - 2, j = y + 2; i >= 0 && j < BOARD_SIZE; i--, j++)
+            {
+                if (new_board[i][j] == EMPTY)
+                    break;
+                if (new_board[i][j] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; i < x && j > y; i++, j--)
+                {
+                    new_board[i][j] = cell_to_flip;
+                }
+            }
+        }
+
+        // Check bottom left of cell
+        if (x + 1 < BOARD_SIZE - 1 && y - 1 > 0)
+        {
+            bool flag = false;
+            int i, j;
+            for (i = x + 2, j = y - 2; i < BOARD_SIZE && j >= 0; i++, j--)
+            {
+                if (new_board[i][j] == EMPTY)
+                    break;
+                if (new_board[i][j] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; i > x && j < y; i--, j++)
+                {
+                    new_board[i][j] = cell_to_flip;
+                }
+            }
+        }
+
+        // Check bottom right of cell
+        if (x + 1 < BOARD_SIZE - 1 && y + 1 < BOARD_SIZE)
+        {
+            bool flag = false;
+            int i, j;
+            for (i = x + 2, j = y + 2; i < BOARD_SIZE && j < BOARD_SIZE; i++, j++)
+            {
+                if (new_board[i][j] == EMPTY)
+                    break;
+                if (new_board[i][j] == cell_to_flip)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                for (; i > x && j > y; i--, j--)
+                {
+                    new_board[i][j] = cell_to_flip;
+                }
+            }
+        }
+
+        GameState new_state(new_board, this->player, this->opponent, !this->player_turn);
+        return new_state;
+    }
 };
 
 int main()
