@@ -512,7 +512,21 @@ int main()
 
     // Initialize GameState object
     GameState start_state(board, player[0], opponent[0], true);
+    
+    cout << "START STATE" << '\n';
     start_state.print_board();
+
+    vector<pair<int, int>> moves = start_state.valid_moves();
+    GameState prev_state = start_state;
+    while (!moves.empty())
+    {
+        cout << "NEXT MOVE" << '\n';
+        GameState next_state = prev_state.play(moves[0]);
+        next_state.print_board();
+        prev_state = next_state;
+        moves = prev_state.valid_moves();
+    }
+    
 
     return 0;
 }
