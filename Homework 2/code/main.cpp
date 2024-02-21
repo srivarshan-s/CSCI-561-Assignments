@@ -19,7 +19,6 @@ private:
     vector<vector<char>> board;
     char player;
     char opponent;
-    int value;
     bool player_turn;
 
 public:
@@ -29,7 +28,6 @@ public:
         this->board = board;
         this->player = player;
         this->opponent = opponent;
-        this->value = this->evaluate();
         this->player_turn = turn;
     }
 
