@@ -558,6 +558,33 @@ string get_move(pair<int, int> move)
     return (x_coord + y_coord);
 }
 
+// Function to play game against random opponent
+void play_against_random(GameState start_state)
+{
+    cout << "START STATE" << '\n';
+    start_state.print_board();
+
+    vector<pair<int, int>> moves = start_state.valid_moves();
+    GameState prev_state = start_state;
+    srand(time(0));
+    while (!moves.empty())
+    {
+        pair<int, int> next_move = moves[0];
+        cout << "NEXT MOVE" << '\n';
+        if (prev_state.turn()) {
+            next_move = mini_max(prev_state, 0, 5, make_pair(-1, -1), ALPHA, BETA).second;
+        }
+        else
+        {
+            next_move = moves[rand() % moves.size()];
+        }
+        GameState next_state = prev_state.play(next_move);
+        next_state.print_board();
+        prev_state = next_state;
+        moves = prev_state.valid_moves();
+    }
+}
+
 int main()
 {
     // Read the input file
@@ -595,35 +622,15 @@ int main()
     // Initialize GameState object
     GameState start_state(board, player[0], opponent[0], true);
 
-    cout << "START STATE" << '\n';
-    start_state.print_board();
+    // Search for best move
     pair<int, int> move = mini_max(start_state, 0, 5, make_pair(-1, -1), ALPHA, BETA).second;
-    cout << "Next move: " << get_move(move) << "\n";
 
     // Write move to output file
     ofstream output_file("output.txt");
     output_file << get_move(move) << "\n";
     output_file.close();
 
-    // vector<pair<int, int>> moves = start_state.valid_moves();
-    // GameState prev_state = start_state;
-    // srand(time(0));
-    // while (!moves.empty())
-    // {
-    //     pair<int, int> next_move = moves[0];
-    //     cout << "NEXT MOVE" << '\n';
-    //     if (prev_state.turn()) {
-    //         next_move = mini_max(prev_state, 0, 3, make_pair(-1, -1)).second;
-    //     }
-    //     else
-    //     {
-    //         next_move = moves[rand() % BOARD_SIZE];
-    //     }
-    //     GameState next_state = prev_state.play(next_move);
-    //     next_state.print_board();
-    //     prev_state = next_state;
-    //     moves = prev_state.valid_moves();
-    // }
+    // play_against_random(start_state);
 
     return 0;
 }
