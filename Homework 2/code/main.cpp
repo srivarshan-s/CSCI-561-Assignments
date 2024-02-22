@@ -558,7 +558,7 @@ string get_move(pair<int, int> move)
     return (x_coord + y_coord);
 }
 
-// Function to play game against random opponent
+// Function to play game against random agent
 void play_against_random(GameState start_state)
 {
     cout << "START STATE" << '\n';
