@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <map>
 
 using namespace std;
 
@@ -484,6 +485,68 @@ public:
     }
 };
 
+// Function to perform minimax
+pair<int, pair<int, int>> mini_max(GameState game_state, int depth, int limit, pair<int, int> prev_move)
+{
+    // cout << "Checking move: " << prev_move.first << " " << prev_move.second << "\n";
+    
+    // Check if no more valid moves are possible
+    vector<pair<int, int>> valid_moves = game_state.valid_moves();
+    if (valid_moves.empty())
+    {
+        return make_pair(game_state.evaluate(), prev_move);
+    }
+    
+    // If depth reaches limit then return game state val
+    if (depth == limit)
+    {
+        return make_pair(game_state.evaluate(), prev_move);
+    }
+    
+    // If player turn then find the max
+    if (game_state.turn())
+    {
+        int max = -999;
+        pair<int, int> next_move;
+        for (pair<int, int> move : valid_moves)
+        {
+            int val = mini_max(game_state.play(move), depth+1, limit, move).first;
+            if (val > max)
+            {
+                max = val;
+                next_move = move;
+            }
+        }
+        return make_pair(max, next_move);
+    }
+
+    // If opponent turn then find the min
+    else {
+        int min = 999;
+        pair<int, int> next_move;
+        for (pair<int, int> move : valid_moves)
+        {
+            int val = mini_max(game_state.play(move), depth+1, limit, move).first;
+            if (val < min)
+            {
+                min = val;
+                next_move = move;
+            }
+        }
+        return make_pair(min, next_move);
+    }
+}
+
+// Function to get the move using idx
+string get_move(pair<int, int> move)
+{
+    // Initialize look-up vector
+    vector<string> lookup_vec = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"};
+    string x_coord = lookup_vec[move.second];
+    string y_coord = to_string(move.first + 1);
+    return (x_coord + y_coord);
+}
+
 int main()
 {
     // Read the input file
@@ -515,39 +578,49 @@ int main()
         board.push_back(board_line);
     }
 
+    // Close the file
+    input_file.close();
+
     // Initialize GameState object
     GameState start_state(board, player[0], opponent[0], true);
     
     cout << "START STATE" << '\n';
     start_state.print_board();
+    pair<int, int> move = mini_max(start_state, 0, 5, make_pair(-1, -1)).second;
+    cout << "Next move: " << get_move(move) << "\n";
 
-    vector<pair<int, int>> moves = start_state.valid_moves();
-    GameState prev_state = start_state;
-    while (!moves.empty())
-    {
-        int max = -999;
-        int min = 999;
-        pair<int, int> next_move = moves[0];
-        cout << "NEXT MOVE" << '\n';
-        for (auto move: moves) {
-            GameState temp_state = prev_state.play(move);
-            int val = temp_state.evaluate();
-            if (prev_state.turn() && val > max)
-            {
-                max = val;
-                next_move = move;
-            }
-            if (!prev_state.turn() && val < min)
-            {
-                min = val;
-                next_move = move;
-            }
-        }
-        GameState next_state = prev_state.play(next_move);
-        next_state.print_board();
-        prev_state = next_state;
-        moves = prev_state.valid_moves();
-    }
+    // Write move to output file
+    ofstream output_file("output.txt");
+    output_file << get_move(move) << "\n";
+    output_file.close();
+
+    // vector<pair<int, int>> moves = start_state.valid_moves();
+    // GameState prev_state = start_state;
+    // while (!moves.empty())
+    // {
+    //     int max = -999;
+    //     int min = 999;
+    //     pair<int, int> next_move = moves[0];
+    //     cout << "NEXT MOVE" << '\n';
+    //     for (pair<int, int> move: moves) {
+    //         GameState temp_state = prev_state.play(move);
+    //         int val = temp_state.evaluate();
+    //         if (prev_state.turn() && val > max)
+    //         {
+    //             max = val;
+    //             next_move = move;
+    //         }
+    //         if (!prev_state.turn() && val < min)
+    //         {
+    //             min = val;
+    //             next_move = move;
+    //         }
+    //     }
+    //     GameState next_state = prev_state.play(next_move);
+    //     next_state.print_board();
+    //     prev_state = next_state;
+    //     moves = prev_state.valid_moves();
+    // }
     
 
     return 0;
