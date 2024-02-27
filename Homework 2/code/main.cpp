@@ -18,6 +18,10 @@ const char EMPTY = '.';
 const int ALPHA = -999;
 const int BETA = 999;
 
+// Global constants for dynamic depth
+const int LOWER_DEPTH = 6;
+const int UPPER_DEPTH = 7;
+
 // Class to maintain game state
 class GameState
 {
@@ -489,22 +493,35 @@ public:
         GameState new_state(new_board, this->player, this->opponent, !this->player_turn);
         return new_state;
     }
+
+    // Function to return ratio of disks to cells
+    float disk_cell_ratio()
+    {
+        int count = 0;
+        for (int i = 0; i < BOARD_SIZE; i++)
+        {
+            for (int j = 0; j < BOARD_SIZE; j++)
+            {
+                if (this->board[i][j] == 'X' || this->board[i][j] == 'O') count++;
+            }
+        }
+        return count / (BOARD_SIZE * BOARD_SIZE);
+    }
 };
 
 // Function to perform minimax with alpha-beta pruning
 pair<int, pair<int, int>> mini_max(GameState game_state, int depth, int limit, pair<int, int> prev_move, int alpha, int beta)
 {
-    // cout << "Checking move: " << prev_move.first << " " << prev_move.second << "\n";
-
-    // Check if no more valid moves are possible
-    vector<pair<int, int>> valid_moves = game_state.valid_moves();
-    if (valid_moves.empty())
+    // If depth reaches limit then return game state val
+    if (depth == limit)
     {
         return make_pair(game_state.evaluate(), prev_move);
     }
+    
+    // Check if no more valid moves are possible
+    vector<pair<int, int>> valid_moves = game_state.valid_moves();
 
-    // If depth reaches limit then return game state val
-    if (depth == limit)
+    if (valid_moves.empty())
     {
         return make_pair(game_state.evaluate(), prev_move);
     }
@@ -523,7 +540,8 @@ pair<int, pair<int, int>> mini_max(GameState game_state, int depth, int limit, p
                 next_move = move;
             }
             alpha = std::max(alpha, max);
-            if (alpha >= beta) break;
+            if (alpha >= beta)
+                break;
         }
         return make_pair(max, next_move);
     }
@@ -542,7 +560,8 @@ pair<int, pair<int, int>> mini_max(GameState game_state, int depth, int limit, p
                 next_move = move;
             }
             beta = std::min(beta, min);
-            if (alpha >= beta) break;
+            if (alpha >= beta)
+                break;
         }
         return make_pair(min, next_move);
     }
@@ -571,8 +590,13 @@ void play_against_random(GameState start_state)
     {
         pair<int, int> next_move = moves[0];
         cout << "NEXT MOVE" << '\n';
-        if (prev_state.turn()) {
-            next_move = mini_max(prev_state, 0, 5, make_pair(-1, -1), ALPHA, BETA).second;
+        if (prev_state.turn())
+        {
+            float ratio = prev_state.disk_cell_ratio();
+            if (0.25 > ratio || ratio > 0.75)
+                next_move = mini_max(start_state, 0, UPPER_DEPTH, make_pair(-1, -1), ALPHA, BETA).second;
+            else
+                next_move = mini_max(start_state, 0, LOWER_DEPTH, make_pair(-1, -1), ALPHA, BETA).second;
         }
         else
         {
@@ -623,7 +647,12 @@ int main()
     GameState start_state(board, player[0], opponent[0], true);
 
     // Search for best move
-    pair<int, int> move = mini_max(start_state, 0, 5, make_pair(-1, -1), ALPHA, BETA).second;
+    pair<int, int> move;
+    float ratio = start_state.disk_cell_ratio();
+    if (player_time > 100 && (0.25 > ratio || ratio > 0.75))
+        move = mini_max(start_state, 0, UPPER_DEPTH, make_pair(-1, -1), ALPHA, BETA).second;
+    else
+        move = mini_max(start_state, 0, LOWER_DEPTH, make_pair(-1, -1), ALPHA, BETA).second;
 
     // Write move to output file
     ofstream output_file("output.txt");
