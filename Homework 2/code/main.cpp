@@ -1,7 +1,6 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <map>
 #include <vector>
 
 using namespace std;
@@ -497,7 +496,7 @@ public:
     // Function to return ratio of disks to cells
     float disk_cell_ratio()
     {
-        int count = 0;
+        float count = 0;
         for (int i = 0; i < BOARD_SIZE; i++)
         {
             for (int j = 0; j < BOARD_SIZE; j++)
