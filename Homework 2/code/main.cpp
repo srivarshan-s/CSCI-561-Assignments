@@ -19,7 +19,7 @@ const int BETA = 999;
 
 // Global constants for dynamic depth
 const int LOWER_DEPTH = 6;
-const int UPPER_DEPTH = 8;
+const int UPPER_DEPTH = 10;
 const int PIVOT = 10;
 
 // Class to maintain game state
