@@ -89,13 +89,34 @@ public:
 
         return product;
     }
+
+    // Perform element-wise matrix multiplication
+    Matrix element_multiply(Matrix &mat)
+    {
+        // Make sure that the shape of both matrices are the same
+        assert(this->shape == mat.shape);
+
+        // Initialize product matrix
+        Matrix product((*this));
+
+        // Multiply element-wise
+        for (size_t r = 0; r < product.rows; r++)
+        {
+            for (size_t c = 0; c < product.cols; c++)
+            {
+                product(r, c) = mat(r, c) * (*this)(r, c);
+            }
+        }
+        
+        return product;
+    }
 };
 
 int main()
 {
     Matrix<int> A = Matrix<int>(3, 6);
-    Matrix<int> B = Matrix<int>(6, 1);
-    Matrix<int> C = A.matrix_multiply(B);
+    Matrix<int> B = Matrix<int>(3, 6);
+    Matrix<int> C = A.element_multiply(B);
     C.print();
     return 0;
 }
