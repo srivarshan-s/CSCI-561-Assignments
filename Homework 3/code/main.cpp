@@ -128,6 +128,31 @@ public:
 
         return product;
     }
+
+    // Perform matrix addition
+    Matrix add(Matrix &mat)
+    {
+        // Make sure that the shape of both matrices are the same
+        assert(this->shape == mat.shape);
+
+        // Initialize product matrix
+        Matrix sum((*this));
+
+        // Add element-wise
+        for (size_t r = 0; r < sum.rows; r++)
+        {
+            for (size_t c = 0; c < sum.cols; c++)
+            {
+                sum(r, c) = mat(r, c) + (*this)(r, c);
+            }
+        }
+
+        return sum;
+    }
+    Matrix operator+(Matrix &mat)
+    {
+        return add(mat);
+    }
 };
 
 int main()
