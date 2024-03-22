@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <assert.h>
 
 using namespace std;
 
@@ -57,7 +58,6 @@ public:
             }
             cout << "\n";
         }
-        cout << "\n";
     }
 
     // Access Matrix elements
@@ -65,13 +65,37 @@ public:
     {
         return this->data[rows * cols + cols];
     }
+
+    // Perform matrix multiplication
+    Matrix matrix_multiply(Matrix &mat)
+    {
+        // Make sure that num of cols of A
+        // is equal to number of rows of B
+        assert(this->cols == mat.rows);
+
+        // Initialize product matrix
+        Matrix product(this->rows, mat.cols);
+
+        for (size_t r = 0; r < product.rows; r++)
+        {
+            for (size_t c = 0; c < product.cols; c++)
+            {
+                for (size_t k = 0; k < mat.rows; k++)
+                {
+                    product(r, c) += (*this)(r, k) * mat(k, c);
+                }
+            }
+        }
+
+        return product;
+    }
 };
 
 int main()
 {
-    Matrix<int> M = Matrix<int>(3, 6);
-    M.print_shape();
-    M.print();
-    cout << M(2, 2) << "\n";
+    Matrix<int> A = Matrix<int>(3, 6);
+    Matrix<int> B = Matrix<int>(6, 1);
+    Matrix<int> C = A.matrix_multiply(B);
+    C.print();
     return 0;
 }
