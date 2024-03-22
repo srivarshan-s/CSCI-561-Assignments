@@ -107,7 +107,25 @@ public:
                 product(r, c) = mat(r, c) * (*this)(r, c);
             }
         }
-        
+
+        return product;
+    }
+
+    // Perform scalar matrix multiplication
+    Matrix scalar_multiply(Type k)
+    {
+        // Initialize product matrix
+        Matrix product((*this));
+
+        // Multiply element-wise with scalar
+        for (size_t r = 0; r < product.rows; r++)
+        {
+            for (size_t c = 0; c < product.cols; c++)
+            {
+                product(r, c) = k * (*this)(r, c);
+            }
+        }
+
         return product;
     }
 };
