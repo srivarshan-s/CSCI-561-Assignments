@@ -153,13 +153,60 @@ public:
     {
         return add(mat);
     }
+
+    // Unary negation
+    Matrix operator-()
+    {
+        Matrix output((*this));
+        for (size_t r = 0; r < output.rows; r++)
+        {
+            for (size_t c = 0; c < output.cols; c++)
+            {
+                output(r, c) = -(*this)(r, c);
+            }
+        }
+        return output;
+    }
+
+    // Perform matrix subtraction
+    Matrix subtract(Matrix &mat)
+    {
+        // Make sure that the shape of both matrices are the same
+        assert(this->shape == mat.shape);
+
+        // Initialize product matrix
+        Matrix sum((*this));
+
+        // Add element-wise
+        for (size_t r = 0; r < sum.rows; r++)
+        {
+            for (size_t c = 0; c < sum.cols; c++)
+            {
+                sum(r, c) = (*this)(r, c) - mat(r, c);
+            }
+        }
+
+        return sum;
+    }
+    Matrix operator-(Matrix &mat)
+    {
+        return subtract(mat);
+    }
 };
 
 int main()
 {
-    Matrix<int> A = Matrix<int>(3, 6);
-    Matrix<int> B = Matrix<int>(3, 6);
-    Matrix<int> C = A.element_multiply(B);
+    Matrix<int> A = Matrix<int>(2, 2);
+    A(0, 0) = 1;
+    A(0, 1) = 1;
+    A(1, 0) = 1;
+    A(1, 1) = 1;
+    Matrix<int> B = Matrix<int>(2, 2);
+    B(0, 0) = 2;
+    B(0, 1) = 2;
+    B(1, 0) = 2;
+    B(1, 1) = 2;
+    Matrix<int> C = B - A;
     C.print();
     return 0;
 }
