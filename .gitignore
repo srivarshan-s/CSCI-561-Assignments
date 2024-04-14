@@ -6,6 +6,7 @@ a.out
 .idea/
 cmake-build-debug/
 *.dSYM/
+__pycache__/
 
 # Homework 1
 homework.dSYM/
