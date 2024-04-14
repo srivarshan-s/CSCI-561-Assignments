@@ -137,7 +137,7 @@ class NeuralNetwork:
         best_model = None
 
         for epoch in tqdm(range(epochs)):
-        # for epoch in range(epochs):
+            # for epoch in range(epochs):
             # Shuffling within each epoch
             X_train_shuffled, y_train_shuffled = shuffle(
                 x_train, y_train, random_state=epoch
@@ -204,13 +204,17 @@ def load_train_data():
         "MAIN_ADDRESS",
         "ADMINISTRATIVE_AREA_LEVEL_2",
         "LOCALITY",
-        "SUBLOCALITY",
+        # "SUBLOCALITY",
         "STREET_NAME",
         "LONG_NAME",
         "FORMATTED_ADDRESS",
     ]
     df = df.drop(cols_to_drop, axis=1)
     enc_df = enc_df.drop(cols_to_drop, axis=1)
+
+    # Remove "for sale" suffix from TYPE column
+    df["TYPE"] = df["TYPE"].apply(lambda row: row.removesuffix(" for sale"))
+    enc_df["TYPE"] = enc_df["TYPE"].apply(lambda row: row.removesuffix(" for sale"))
 
     # Encode the TYPE column
     encoder_TYPE = OneHotEncoder()
@@ -220,6 +224,15 @@ def load_train_data():
         encoded_data, columns=encoder_TYPE.get_feature_names_out(["TYPE"])
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
+
+    # Encode the SUBLOCALITY column
+    encoder_SUBLOCALITY = OneHotEncoder()
+    encoder_SUBLOCALITY = encoder_SUBLOCALITY.fit(enc_df[["SUBLOCALITY"]])
+    encoded_data = encoder_SUBLOCALITY.transform(df[["SUBLOCALITY"]]).toarray()
+    encoded_df = pd.DataFrame(
+        encoded_data, columns=encoder_SUBLOCALITY.get_feature_names_out(["SUBLOCALITY"])
+    )
+    df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
 
     # Scale the PRICE column
     scaler_PRICE = MinMaxScaler()
@@ -254,6 +267,7 @@ def load_train_data():
     # Encoder map
     enc_map = dict()
     enc_map["TYPE"] = encoder_TYPE
+    enc_map["SUBLOCALITY"] = encoder_SUBLOCALITY
 
     # Scaler map
     scaler_map = dict()
@@ -290,12 +304,15 @@ def load_test_data(enc_map, scaler_map):
         "MAIN_ADDRESS",
         "ADMINISTRATIVE_AREA_LEVEL_2",
         "LOCALITY",
-        "SUBLOCALITY",
+        # "SUBLOCALITY",
         "STREET_NAME",
         "LONG_NAME",
         "FORMATTED_ADDRESS",
     ]
     df = df.drop(cols_to_drop, axis=1)
+
+    # Remove "for sale" suffix from TYPE column
+    df["TYPE"] = df["TYPE"].apply(lambda row: row.removesuffix(" for sale"))
 
     # Encode the TYPE column
     encoded_data = enc_map["TYPE"].transform(df[["TYPE"]]).toarray()
@@ -303,6 +320,13 @@ def load_test_data(enc_map, scaler_map):
         encoded_data, columns=enc_map["TYPE"].get_feature_names_out(["TYPE"])
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
+
+    # Encode the SUBLOCALITY column
+    encoded_data = enc_map["SUBLOCALITY"].transform(df[["SUBLOCALITY"]]).toarray()
+    encoded_df = pd.DataFrame(
+        encoded_data, columns=enc_map["SUBLOCALITY"].get_feature_names_out(["SUBLOCALITY"])
+    )
+    df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
 
     # Scale the PRICE column
     df["PRICE_SCALED"] = scaler_map["PRICE"].transform(df[["PRICE"]])
