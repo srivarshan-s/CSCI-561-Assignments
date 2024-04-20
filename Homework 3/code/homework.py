@@ -11,7 +11,45 @@ from sklearn.preprocessing import StandardScaler
 
 from sklearn.model_selection import train_test_split
 
-from sklearn.metrics import accuracy_score
+
+"""
+Definitions for utility functions
+"""
+
+
+def accuracy_score(y_true, y_pred, normalize=True):
+    """
+    Computes the accuracy score.
+
+    Args:
+        y_true (1D array-like): Ground truth (correct) labels.
+        y_pred (1D array-like): Predicted labels, as returned by a classifier.
+        normalize (bool, default=True): If False, return the number of
+            correctly classified samples. Otherwise, return the fraction of
+            correctly classified samples (between 0 and 1).
+
+    Returns:
+        float: If normalize == True, return the fraction of correctly
+            classified samples (float), else returns the number of correctly
+            classified samples (int).
+    """
+
+    # Check if shapes match
+    if len(y_true) != len(y_pred):
+        raise ValueError("y_true and y_pred must have the same size.")
+
+    # Cast y_true and y_pred to float32
+    y_true = np.array(y_true).astype(np.float32)
+    y_pred = np.array(y_pred).astype(np.float32)
+
+    # Count the number of correct predictions
+    correct = np.sum(y_true == y_pred)
+
+    # Return accuracy based on normalization parameter
+    if normalize:
+        return correct / len(y_true)
+    else:
+        return correct
 
 
 # Define the fully-connected layer
@@ -81,6 +119,9 @@ def mae(y_true, y_pred):
     return np.mean(np.abs(y_true - y_pred))
 
 
+# Define error function (mape)
+def mape(y_true, y_pred):
+    return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 # Define derivative of error function (mae)
 def mae_prime(y_true, y_pred):
     return np.sign(y_pred - y_true) / y_pred.size
@@ -89,6 +130,11 @@ def mae_prime(y_true, y_pred):
 # Define derivative of error function (mse)
 def mse_prime(y_true, y_pred):
     return 2 * (y_pred - y_true) / y_pred.size
+
+
+# Define derivative of error function (mape)
+def mape_prime(y_true, y_pred):
+    return -np.mean(np.sign(y_true - y_pred) / y_true) * 100
 
 
 # Define base neural network class
@@ -204,7 +250,7 @@ def load_train_data():
         "MAIN_ADDRESS",
         "ADMINISTRATIVE_AREA_LEVEL_2",
         "LOCALITY",
-        # "SUBLOCALITY",
+        "SUBLOCALITY",
         "STREET_NAME",
         "LONG_NAME",
         "FORMATTED_ADDRESS",
@@ -225,41 +271,50 @@ def load_train_data():
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
 
-    # Encode the SUBLOCALITY column
-    encoder_SUBLOCALITY = OneHotEncoder()
-    encoder_SUBLOCALITY = encoder_SUBLOCALITY.fit(enc_df[["SUBLOCALITY"]])
-    encoded_data = encoder_SUBLOCALITY.transform(df[["SUBLOCALITY"]]).toarray()
-    encoded_df = pd.DataFrame(
-        encoded_data, columns=encoder_SUBLOCALITY.get_feature_names_out(["SUBLOCALITY"])
-    )
-    df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
+    # # Encode the SUBLOCALITY column
+    # encoder_SUBLOCALITY = OneHotEncoder()
+    # encoder_SUBLOCALITY = encoder_SUBLOCALITY.fit(enc_df[["SUBLOCALITY"]])
+    # encoded_data = encoder_SUBLOCALITY.transform(df[["SUBLOCALITY"]]).toarray()
+    # encoded_df = pd.DataFrame(
+    #     encoded_data, columns=encoder_SUBLOCALITY.get_feature_names_out(["SUBLOCALITY"])
+    # )
+    # df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
+
+    # # Encode the ADMINISTRATIVE_AREA_LEVEL_2 column
+    # encoder_ADMINISTRATIVE_AREA_LEVEL_2 = OneHotEncoder()
+    # encoder_ADMINISTRATIVE_AREA_LEVEL_2 = encoder_ADMINISTRATIVE_AREA_LEVEL_2.fit(enc_df[["ADMINISTRATIVE_AREA_LEVEL_2"]])
+    # encoded_data = encoder_ADMINISTRATIVE_AREA_LEVEL_2.transform(df[["ADMINISTRATIVE_AREA_LEVEL_2"]]).toarray()
+    # encoded_df = pd.DataFrame(
+    #     encoded_data, columns=encoder_ADMINISTRATIVE_AREA_LEVEL_2.get_feature_names_out(["ADMINISTRATIVE_AREA_LEVEL_2"])
+    # )
+    # df = pd.concat([df.drop(["ADMINISTRATIVE_AREA_LEVEL_2"], axis=1), encoded_df], axis=1)
 
     # Scale the PRICE column
-    scaler_PRICE = MinMaxScaler()
+    scaler_PRICE = StandardScaler()
     scaler_PRICE = scaler_PRICE.fit(enc_df[["PRICE"]])
     df["PRICE_SCALED"] = scaler_PRICE.transform(df[["PRICE"]])
     df = df.drop(["PRICE"], axis=1)
 
     # Scale the BATH column
-    scaler_BATH = MinMaxScaler()
+    scaler_BATH = StandardScaler()
     scaler_BATH = scaler_BATH.fit(enc_df[["BATH"]])
     df["BATH_SCALED"] = scaler_BATH.transform(df[["BATH"]])
     df = df.drop(["BATH"], axis=1)
 
     # Scale the PROPERTYSQFT column
-    scaler_PROPERTYSQFT = MinMaxScaler()
+    scaler_PROPERTYSQFT = StandardScaler()
     scaler_PROPERTYSQFT = scaler_PROPERTYSQFT.fit(enc_df[["PROPERTYSQFT"]])
     df["PROPERTYSQFT_SCALED"] = scaler_PROPERTYSQFT.transform(df[["PROPERTYSQFT"]])
     df = df.drop(["PROPERTYSQFT"], axis=1)
 
     # Scale the LATITUDE column
-    scaler_LATITUDE = MinMaxScaler()
+    scaler_LATITUDE = StandardScaler()
     scaler_LATITUDE = scaler_LATITUDE.fit(enc_df[["LATITUDE"]])
     df["LATITUDE_SCALED"] = scaler_LATITUDE.transform(df[["LATITUDE"]])
     df = df.drop(["LATITUDE"], axis=1)
 
     # Scale the LONGITUDE column
-    scaler_LONGITUDE = MinMaxScaler()
+    scaler_LONGITUDE = StandardScaler()
     scaler_LONGITUDE = scaler_LONGITUDE.fit(enc_df[["LONGITUDE"]])
     df["LONGITUDE_SCALED"] = scaler_LONGITUDE.transform(df[["LONGITUDE"]])
     df = df.drop(["LONGITUDE"], axis=1)
@@ -267,7 +322,8 @@ def load_train_data():
     # Encoder map
     enc_map = dict()
     enc_map["TYPE"] = encoder_TYPE
-    enc_map["SUBLOCALITY"] = encoder_SUBLOCALITY
+    # enc_map["SUBLOCALITY"] = encoder_SUBLOCALITY
+    # enc_map["ADMINISTRATIVE_AREA_LEVEL_2"] = encoder_ADMINISTRATIVE_AREA_LEVEL_2
 
     # Scaler map
     scaler_map = dict()
@@ -276,6 +332,9 @@ def load_train_data():
     scaler_map["PROPERTYSQFT"] = scaler_PROPERTYSQFT
     scaler_map["LATITUDE"] = scaler_LATITUDE
     scaler_map["LONGITUDE"] = scaler_LONGITUDE
+
+    # # Drop rows where num(BEDS) > 8
+    # df = df[df["BEDS"] <= 8]
 
     X = np.array(df.drop(["BEDS"], axis=1), dtype="float32")
     y = np.array(df[["BEDS"]], dtype="float32")
@@ -304,7 +363,7 @@ def load_test_data(enc_map, scaler_map):
         "MAIN_ADDRESS",
         "ADMINISTRATIVE_AREA_LEVEL_2",
         "LOCALITY",
-        # "SUBLOCALITY",
+        "SUBLOCALITY",
         "STREET_NAME",
         "LONG_NAME",
         "FORMATTED_ADDRESS",
@@ -321,12 +380,21 @@ def load_test_data(enc_map, scaler_map):
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
 
-    # Encode the SUBLOCALITY column
-    encoded_data = enc_map["SUBLOCALITY"].transform(df[["SUBLOCALITY"]]).toarray()
-    encoded_df = pd.DataFrame(
-        encoded_data, columns=enc_map["SUBLOCALITY"].get_feature_names_out(["SUBLOCALITY"])
-    )
-    df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
+    # # Encode the SUBLOCALITY column
+    # encoded_data = enc_map["SUBLOCALITY"].transform(df[["SUBLOCALITY"]]).toarray()
+    # encoded_df = pd.DataFrame(
+    #     encoded_data,
+    #     columns=enc_map["SUBLOCALITY"].get_feature_names_out(["SUBLOCALITY"]),
+    # )
+    # df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
+
+    # # Encode the ADMINISTRATIVE_AREA_LEVEL_2 column
+    # encoded_data = enc_map["ADMINISTRATIVE_AREA_LEVEL_2"].transform(df[["ADMINISTRATIVE_AREA_LEVEL_2"]]).toarray()
+    # encoded_df = pd.DataFrame(
+    #     encoded_data,
+    #     columns=enc_map["ADMINISTRATIVE_AREA_LEVEL_2"].get_feature_names_out(["ADMINISTRATIVE_AREA_LEVEL_2"]),
+    # )
+    # df = pd.concat([df.drop(["ADMINISTRATIVE_AREA_LEVEL_2"], axis=1), encoded_df], axis=1)
 
     # Scale the PRICE column
     df["PRICE_SCALED"] = scaler_map["PRICE"].transform(df[["PRICE"]])
@@ -419,7 +487,8 @@ def write_out(pred):
 # Main function
 def main():
     # Set random seed
-    np.random.seed(41275)
+    # np.random.seed(41275)
+    np.random.seed(963713)
 
     # Load the data
     X, y, enc_map, scaler_map = load_train_data()
@@ -436,7 +505,7 @@ def main():
     model.add(Activation(relu, relu_prime))
 
     # Assign the loss function
-    model.use(mae, mae_prime)
+    model.use(mape, mape_prime)
 
     # Train the model
     model, acc = model.fit(
