@@ -7,7 +7,7 @@ import copy
 from sklearn.utils import shuffle
 
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 
 from sklearn.model_selection import train_test_split
 
