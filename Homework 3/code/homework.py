@@ -5,14 +5,72 @@ from tqdm import tqdm
 import copy
 
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import StandardScaler
-
 from sklearn.model_selection import train_test_split
 
 
 """
 Definitions for utility functions
 """
+
+
+class StandardScaler:
+    """
+    Standardize features by removing the mean and scaling to unit variance.
+
+    Centering and scaling happen independently on each feature by computing
+    the relevant statistics on the samples provided.
+
+    Args:
+        with_mean (bool, default=True): If True, center the data before
+            scaling.
+        with_std (bool, default=True): If True, scale the data to unit
+            variance (std=1).
+    """
+
+    def __init__(self, with_mean=True, with_std=True):
+        self.with_mean = with_mean
+        self.with_std = with_std
+        self.mean_ = None
+        self.scale_ = None
+
+    def fit(self, X):
+        """
+        Compute the mean and standard deviation to be used for scaling.
+
+        Args:
+            X (array-like of shape (n_samples, n_features)): The data used to
+                compute the mean and standard deviation.
+        """
+        self.mean_ = np.mean(X, axis=0)
+        if self.with_std:
+            self.scale_ = np.std(X, axis=0)
+            # Prevent division by zero
+            self.scale_[self.scale_ == 0] = 1
+        return self
+
+    def transform(self, X):
+        """
+        Perform standardization by centering and scaling.
+
+        Args:
+            X (array-like of shape (n_samples, n_features)): The data to
+                standardize.
+
+        Returns:
+            X_scaled (array-like): The data after standardization.
+        """
+        if self.mean_ is None or self.scale_ is None:
+            raise ValueError(
+                "This StandardScaler instance is not fitted yet. "
+                "Call 'fit' with appropriate arguments before using this method."
+            )
+
+        X_centered = X - self.mean_
+        if self.with_std:
+            X_scaled = X_centered / self.scale_
+        else:
+            X_scaled = X_centered
+        return X_scaled
 
 
 def accuracy_score(y_true, y_pred, normalize=True):
