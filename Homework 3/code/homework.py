@@ -4,8 +4,6 @@ import pandas as pd
 from tqdm import tqdm
 import copy
 
-from sklearn.utils import shuffle
-
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
 
@@ -50,6 +48,33 @@ def accuracy_score(y_true, y_pred, normalize=True):
         return correct / len(y_true)
     else:
         return correct
+
+
+def shuffle(X, y=None, random_state=None):
+    """
+    Shuffle the data in X and optionally y in unison.
+
+    Args:
+        X (array-like): Data to shuffle.
+        y (array-like, optional): Labels to shuffle in unison with X.
+            If None, shuffle X only.
+        random_state (int, optional): Seed for random number generation.
+
+    Returns:
+        shuffled_X (array-like): Shuffled data.
+        shuffled_y (array-like, optional): Shuffled labels if y is not None.
+    """
+    if random_state is None:
+        random_state = np.random.seed()
+
+    permutation = np.random.permutation(len(X))
+
+    shuffled_X = X[permutation]
+    if y is not None:
+        shuffled_y = y[permutation]
+        return shuffled_X, shuffled_y
+    else:
+        return shuffled_X
 
 
 # Define the fully-connected layer
@@ -122,6 +147,8 @@ def mae(y_true, y_pred):
 # Define error function (mape)
 def mape(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+
+
 # Define derivative of error function (mae)
 def mae_prime(y_true, y_pred):
     return np.sign(y_pred - y_true) / y_pred.size
