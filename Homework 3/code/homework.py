@@ -4,7 +4,6 @@ import pandas as pd
 from tqdm import tqdm
 import copy
 
-from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 
 
@@ -13,18 +12,38 @@ Definitions for utility functions
 """
 
 
+class OneHotEncoder:
+    def __init__(self, sparse=False):
+        self.sparse = sparse
+        self.encoders = {}
+        self.feature_names_out = None
+
+    def fit(self, X):
+        if not isinstance(X, pd.Series):
+            raise ValueError("Input must be a pandas Series")
+        self.encoders = {
+            col: pd.api.types.CategoricalDtype(categories=X.unique())
+            for col in [X.name]
+        }
+        self.feature_names_out = [f"{X.name}_{cat}" for cat in self.encoders[X.name].categories]
+        return self
+
+    def transform(self, X):
+        if not isinstance(X, pd.Series):
+            raise ValueError("Input must be a pandas Series")
+        encoded_df = X.to_frame(name=X.name).astype(self.encoders)
+        encoded_df = pd.get_dummies(encoded_df, sparse=self.sparse)
+        return encoded_df.astype(int)
+
+    def get_feature_names_out(self):
+        if self.feature_names_out is None:
+            raise ValueError("Encoder not fitted yet.")
+        return self.feature_names_out
+
+
 class StandardScaler:
     """
     Standardize features by removing the mean and scaling to unit variance.
-
-    Centering and scaling happen independently on each feature by computing
-    the relevant statistics on the samples provided.
-
-    Args:
-        with_mean (bool, default=True): If True, center the data before
-            scaling.
-        with_std (bool, default=True): If True, scale the data to unit
-            variance (std=1).
     """
 
     def __init__(self, with_mean=True, with_std=True):
@@ -36,10 +55,6 @@ class StandardScaler:
     def fit(self, X):
         """
         Compute the mean and standard deviation to be used for scaling.
-
-        Args:
-            X (array-like of shape (n_samples, n_features)): The data used to
-                compute the mean and standard deviation.
         """
         self.mean_ = np.mean(X, axis=0)
         if self.with_std:
@@ -51,13 +66,6 @@ class StandardScaler:
     def transform(self, X):
         """
         Perform standardization by centering and scaling.
-
-        Args:
-            X (array-like of shape (n_samples, n_features)): The data to
-                standardize.
-
-        Returns:
-            X_scaled (array-like): The data after standardization.
         """
         if self.mean_ is None or self.scale_ is None:
             raise ValueError(
@@ -76,18 +84,6 @@ class StandardScaler:
 def accuracy_score(y_true, y_pred, normalize=True):
     """
     Computes the accuracy score.
-
-    Args:
-        y_true (1D array-like): Ground truth (correct) labels.
-        y_pred (1D array-like): Predicted labels, as returned by a classifier.
-        normalize (bool, default=True): If False, return the number of
-            correctly classified samples. Otherwise, return the fraction of
-            correctly classified samples (between 0 and 1).
-
-    Returns:
-        float: If normalize == True, return the fraction of correctly
-            classified samples (float), else returns the number of correctly
-            classified samples (int).
     """
 
     # Check if shapes match
@@ -111,16 +107,6 @@ def accuracy_score(y_true, y_pred, normalize=True):
 def shuffle(X, y=None, random_state=None):
     """
     Shuffle the data in X and optionally y in unison.
-
-    Args:
-        X (array-like): Data to shuffle.
-        y (array-like, optional): Labels to shuffle in unison with X.
-            If None, shuffle X only.
-        random_state (int, optional): Seed for random number generation.
-
-    Returns:
-        shuffled_X (array-like): Shuffled data.
-        shuffled_y (array-like, optional): Shuffled labels if y is not None.
     """
     if random_state is None:
         random_state = np.random.seed()
@@ -349,10 +335,10 @@ def load_train_data():
 
     # Encode the TYPE column
     encoder_TYPE = OneHotEncoder()
-    encoder_TYPE = encoder_TYPE.fit(enc_df[["TYPE"]])
-    encoded_data = encoder_TYPE.transform(df[["TYPE"]]).toarray()
+    encoder_TYPE = encoder_TYPE.fit(enc_df["TYPE"])
+    encoded_data = encoder_TYPE.transform(df["TYPE"]).values
     encoded_df = pd.DataFrame(
-        encoded_data, columns=encoder_TYPE.get_feature_names_out(["TYPE"])
+        encoded_data, columns=encoder_TYPE.get_feature_names_out()
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
 
@@ -459,9 +445,9 @@ def load_test_data(enc_map, scaler_map):
     df["TYPE"] = df["TYPE"].apply(lambda row: row.removesuffix(" for sale"))
 
     # Encode the TYPE column
-    encoded_data = enc_map["TYPE"].transform(df[["TYPE"]]).toarray()
+    encoded_data = enc_map["TYPE"].transform(df["TYPE"]).values
     encoded_df = pd.DataFrame(
-        encoded_data, columns=enc_map["TYPE"].get_feature_names_out(["TYPE"])
+        encoded_data, columns=enc_map["TYPE"].get_feature_names_out()
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
 
