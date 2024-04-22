@@ -3,13 +3,43 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import copy
-
-from sklearn.model_selection import train_test_split
-
+import random
 
 """
 Definitions for utility functions
 """
+
+
+def train_test_split(X, y=None, test_size=0.25, random_state=None):
+    """
+    Split arrays or matrices into random train and test subsets.
+    """
+
+    if isinstance(X, pd.DataFrame):
+        if y is not None and X.shape[0] != len(y):
+            raise ValueError("y and X must have the same number of samples")
+        X_index = X.index.tolist()  # Handle DataFrames with custom indices
+    else:
+        X_index = range(X.shape[0])  # Handle NumPy arrays
+
+    random.seed(random_state)
+    X_index = list(X_index)
+    random.shuffle(X_index)
+
+    if isinstance(test_size, int):
+        test_size = float(test_size) / len(X_index)
+
+    if test_size < 0 or test_size > 1.0:
+        raise ValueError("test_size must be between 0.0 and 1.0")
+
+    test_index = int(len(X_index) * test_size)
+    X_train, X_test = X[X_index[:-test_index]], X[X_index[-test_index:]]
+
+    if y is not None:
+        y_train, y_test = y[X_index[:-test_index]], y[X_index[-test_index:]]
+        return X_train, X_test, y_train, y_test
+    else:
+        return X_train, X_test
 
 
 class OneHotEncoder:
@@ -25,7 +55,9 @@ class OneHotEncoder:
             col: pd.api.types.CategoricalDtype(categories=X.unique())
             for col in [X.name]
         }
-        self.feature_names_out = [f"{X.name}_{cat}" for cat in self.encoders[X.name].categories]
+        self.feature_names_out = [
+            f"{X.name}_{cat}" for cat in self.encoders[X.name].categories
+        ]
         return self
 
     def transform(self, X):
