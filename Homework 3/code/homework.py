@@ -1,7 +1,6 @@
 # Import libraries
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
 import copy
 import random
 
@@ -209,30 +208,9 @@ def relu_prime(x):
 def leaky_relu_prime(x, alpha=0.01):
     return np.array(x > 0).astype("float") + alpha * np.array(x <= 0).astype("float")
 
-
-# Define error function (mse)
-def mse(y_true, y_pred):
-    return np.mean(np.power(y_true - y_pred, 2))
-
-
-# Define error function (mae)
-def mae(y_true, y_pred):
-    return np.mean(np.abs(y_true - y_pred))
-
-
 # Define error function (mape)
 def mape(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-
-
-# Define derivative of error function (mae)
-def mae_prime(y_true, y_pred):
-    return np.sign(y_pred - y_true) / y_pred.size
-
-
-# Define derivative of error function (mse)
-def mse_prime(y_true, y_pred):
-    return 2 * (y_pred - y_true) / y_pred.size
 
 
 # Define derivative of error function (mape)
@@ -285,8 +263,7 @@ class NeuralNetwork:
         best_acc = -999
         best_model = None
 
-        for epoch in tqdm(range(epochs)):
-            # for epoch in range(epochs):
+        for epoch in range(epochs):
             # Shuffling within each epoch
             X_train_shuffled, y_train_shuffled = shuffle(
                 x_train, y_train, random_state=epoch
@@ -321,10 +298,6 @@ class NeuralNetwork:
             if acc > best_acc:
                 best_acc = acc
                 best_model = copy.deepcopy(self)
-
-            # print(
-            #     f"Learning Rate = {learning_rate}\tEpoch = {epoch+1}\tAccuracy = {round(acc*100, 2)} %"
-            # )
 
         return best_model, best_acc
 
@@ -361,10 +334,6 @@ def load_train_data():
     df = df.drop(cols_to_drop, axis=1)
     enc_df = enc_df.drop(cols_to_drop, axis=1)
 
-    # Remove "for sale" suffix from TYPE column
-    df["TYPE"] = df["TYPE"].apply(lambda row: row.removesuffix(" for sale"))
-    enc_df["TYPE"] = enc_df["TYPE"].apply(lambda row: row.removesuffix(" for sale"))
-
     # Encode the TYPE column
     encoder_TYPE = OneHotEncoder()
     encoder_TYPE = encoder_TYPE.fit(enc_df["TYPE"])
@@ -373,24 +342,6 @@ def load_train_data():
         encoded_data, columns=encoder_TYPE.get_feature_names_out()
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
-
-    # # Encode the SUBLOCALITY column
-    # encoder_SUBLOCALITY = OneHotEncoder()
-    # encoder_SUBLOCALITY = encoder_SUBLOCALITY.fit(enc_df[["SUBLOCALITY"]])
-    # encoded_data = encoder_SUBLOCALITY.transform(df[["SUBLOCALITY"]]).toarray()
-    # encoded_df = pd.DataFrame(
-    #     encoded_data, columns=encoder_SUBLOCALITY.get_feature_names_out(["SUBLOCALITY"])
-    # )
-    # df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
-
-    # # Encode the ADMINISTRATIVE_AREA_LEVEL_2 column
-    # encoder_ADMINISTRATIVE_AREA_LEVEL_2 = OneHotEncoder()
-    # encoder_ADMINISTRATIVE_AREA_LEVEL_2 = encoder_ADMINISTRATIVE_AREA_LEVEL_2.fit(enc_df[["ADMINISTRATIVE_AREA_LEVEL_2"]])
-    # encoded_data = encoder_ADMINISTRATIVE_AREA_LEVEL_2.transform(df[["ADMINISTRATIVE_AREA_LEVEL_2"]]).toarray()
-    # encoded_df = pd.DataFrame(
-    #     encoded_data, columns=encoder_ADMINISTRATIVE_AREA_LEVEL_2.get_feature_names_out(["ADMINISTRATIVE_AREA_LEVEL_2"])
-    # )
-    # df = pd.concat([df.drop(["ADMINISTRATIVE_AREA_LEVEL_2"], axis=1), encoded_df], axis=1)
 
     # Scale the PRICE column
     scaler_PRICE = StandardScaler()
@@ -425,8 +376,6 @@ def load_train_data():
     # Encoder map
     enc_map = dict()
     enc_map["TYPE"] = encoder_TYPE
-    # enc_map["SUBLOCALITY"] = encoder_SUBLOCALITY
-    # enc_map["ADMINISTRATIVE_AREA_LEVEL_2"] = encoder_ADMINISTRATIVE_AREA_LEVEL_2
 
     # Scaler map
     scaler_map = dict()
@@ -435,9 +384,6 @@ def load_train_data():
     scaler_map["PROPERTYSQFT"] = scaler_PROPERTYSQFT
     scaler_map["LATITUDE"] = scaler_LATITUDE
     scaler_map["LONGITUDE"] = scaler_LONGITUDE
-
-    # # Drop rows where num(BEDS) > 8
-    # df = df[df["BEDS"] <= 8]
 
     X = np.array(df.drop(["BEDS"], axis=1), dtype="float32")
     y = np.array(df[["BEDS"]], dtype="float32")
@@ -473,31 +419,12 @@ def load_test_data(enc_map, scaler_map):
     ]
     df = df.drop(cols_to_drop, axis=1)
 
-    # Remove "for sale" suffix from TYPE column
-    df["TYPE"] = df["TYPE"].apply(lambda row: row.removesuffix(" for sale"))
-
     # Encode the TYPE column
     encoded_data = enc_map["TYPE"].transform(df["TYPE"]).values
     encoded_df = pd.DataFrame(
         encoded_data, columns=enc_map["TYPE"].get_feature_names_out()
     )
     df = pd.concat([df.drop(["TYPE"], axis=1), encoded_df], axis=1)
-
-    # # Encode the SUBLOCALITY column
-    # encoded_data = enc_map["SUBLOCALITY"].transform(df[["SUBLOCALITY"]]).toarray()
-    # encoded_df = pd.DataFrame(
-    #     encoded_data,
-    #     columns=enc_map["SUBLOCALITY"].get_feature_names_out(["SUBLOCALITY"]),
-    # )
-    # df = pd.concat([df.drop(["SUBLOCALITY"], axis=1), encoded_df], axis=1)
-
-    # # Encode the ADMINISTRATIVE_AREA_LEVEL_2 column
-    # encoded_data = enc_map["ADMINISTRATIVE_AREA_LEVEL_2"].transform(df[["ADMINISTRATIVE_AREA_LEVEL_2"]]).toarray()
-    # encoded_df = pd.DataFrame(
-    #     encoded_data,
-    #     columns=enc_map["ADMINISTRATIVE_AREA_LEVEL_2"].get_feature_names_out(["ADMINISTRATIVE_AREA_LEVEL_2"]),
-    # )
-    # df = pd.concat([df.drop(["ADMINISTRATIVE_AREA_LEVEL_2"], axis=1), encoded_df], axis=1)
 
     # Scale the PRICE column
     df["PRICE_SCALED"] = scaler_map["PRICE"].transform(df[["PRICE"]])
@@ -590,7 +517,6 @@ def write_out(pred):
 # Main function
 def main():
     # Set random seed
-    # np.random.seed(41275)
     np.random.seed(963713)
 
     # Load the data
@@ -615,18 +541,10 @@ def main():
         X, y, epochs=500, initial_learning_rate=0.001, decay_rate=0.95
     )
 
-    # Report training performance
-    print(f"Training Accuracy = {round(acc*100, 2)} %")
-
     # Perform prediction for the testing data
     X = load_test_data(enc_map, scaler_map)
     pred = model.predict(X)
     pred = get_pred(pred)
-
-    # Report testing performance
-    test_label = np.array(pd.read_csv("test_label.csv")["BEDS"]).tolist()
-    test_acc = accuracy_score(test_label, pred)
-    print(f"Testing Accuracy = {round(test_acc*100, 2)} %")
 
     # Write predictions to output file
     write_out(pred)
