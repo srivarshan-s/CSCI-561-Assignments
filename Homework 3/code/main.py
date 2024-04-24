@@ -4,6 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 import copy
 import random
+import matplotlib.pyplot as plt
 
 """
 Definitions for utility functions
@@ -285,6 +286,9 @@ class NeuralNetwork:
         best_acc = -999
         best_model = None
 
+        plot_train_acc = []
+        plot_val_acc = []
+
         for epoch in tqdm(range(epochs)):
             # for epoch in range(epochs):
             # Shuffling within each epoch
@@ -311,11 +315,21 @@ class NeuralNetwork:
             # Compute average error on all sample
             err /= samples
 
+            # Compute training error
+            pred = self.predict(x_train)
+            pred = get_pred(pred)
+            label = [ele[0][0] for ele in y_train]
+            acc = accuracy_score(label, pred)
+
+            plot_train_acc.append(round(acc * 100, 2))
+
             # Compute validation error
             pred = self.predict(x_val)
             pred = get_pred(pred)
             label = [ele[0][0] for ele in y_val]
             acc = accuracy_score(label, pred)
+
+            plot_val_acc.append(round(acc * 100, 2))
 
             # Checkpoint model
             if acc > best_acc:
@@ -325,6 +339,36 @@ class NeuralNetwork:
             # print(
             #     f"Learning Rate = {learning_rate}\tEpoch = {epoch+1}\tAccuracy = {round(acc*100, 2)} %"
             # )
+
+        # Create a figure and an axes.
+        fig, ax = plt.subplots()
+
+        # Plotting the train acc
+        ax.plot(
+            list(range(1, epochs + 1)),
+            plot_train_acc,
+            label="Training Accuracy",
+            marker=",",
+        )
+
+        # Plotting the train acc
+        ax.plot(
+            list(range(1, epochs + 1)),
+            plot_val_acc,
+            label="Validation Accuracy",
+            marker=",",
+        )
+
+        # Setting labels
+        ax.set_xlabel("Epochs")
+        ax.set_ylabel("Accuracy")
+        ax.set_title("Model Accuracy Over Epochs")
+
+        # Adding legend
+        ax.legend()
+
+        # Save the plot as a PNG file
+        plt.savefig("training_loss_plot.png", format="png", dpi=300)
 
         return best_model, best_acc
 
@@ -612,7 +656,7 @@ def main():
 
     # Train the model
     model, acc = model.fit(
-        X, y, epochs=500, initial_learning_rate=0.001, decay_rate=0.95
+        X, y, epochs=300, initial_learning_rate=0.001, decay_rate=0.95
     )
 
     # Report training performance
